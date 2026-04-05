@@ -1,0 +1,327 @@
+/* ---------- Navbar base ---------- */
+.memo-navbar {
+    background: var(--white);
+    box-shadow: 0 6px 0 var(--shadow);
+    border-bottom: 4px solid var(--white);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    font-family: 'DynaPuff', system-ui, sans-serif;
+}
+
+.memo-nav-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ---------- Brand / Logo ---------- */
+.memo-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.memo-brand:hover {
+    transform: scale(1.05);
+}
+
+.memo-brand-icon {
+    font-size: 1.6em;
+    color: var(--sky);
+    filter: drop-shadow(0 3px 0 #6ab5d8);
+}
+
+.memo-brand-text {
+    font-size: 1.9em;
+    font-weight: 700;
+    color: var(--peach);
+    letter-spacing: 2px;
+    text-shadow: 0 3px 0 #d4886a;
+}
+
+/* ---------- Nav items (derecha) ---------- */
+.memo-nav-items {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* ---------- Nav links ---------- */
+.memo-nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--peach);
+    font-size: 0.92em;
+    font-weight: bold;
+    border: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.memo-nav-link i {
+    font-size: 1.6em;
+    color: var(--sky);
+    transition: color 0.2s;
+}
+
+.memo-nav-link:hover {
+    background: var(--cream);
+    border-color: var(--sky);
+    color: var(--peach);
+    transform: translateY(-2px);
+}
+
+.memo-nav-link:hover i {
+    color: var(--peach);
+}
+
+.memo-nav-link.active {
+    background: var(--cream);
+    border-color: var(--peach);
+    color: var(--peach);
+    box-shadow: 0 4px 0 #d4886a;
+}
+
+.memo-nav-link.active i {
+    color: var(--peach);
+}
+
+/* ---------- Avatar button ---------- */
+.memo-avatar-wrap {
+    position: relative;
+    margin-left: 0.3rem;
+    margin-bottom: 10px;
+}
+
+.memo-avatar-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--peach);
+    border: 4px solid var(--white);
+    box-shadow: 0 4px 0 #d4886a;
+    color: var(--white);
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.memo-avatar-btn:hover {
+    background: var(--sky);
+    box-shadow: 0 4px 0 #6ab5d8;
+    transform: translateY(-2px) scale(1.05);
+}
+
+/* ---------- Dropdown ---------- */
+.memo-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    background: var(--white);
+    border-radius: 20px;
+    border: 3px solid var(--cream);
+    box-shadow: 0 8px 0 var(--shadow), 0 12px 24px rgba(0,0,0,0.1);
+    min-width: 200px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.memo-dropdown.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+
+/* Triangulito apuntando hacia arriba */
+.memo-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: 14px;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 10px solid var(--cream);
+}
+
+/* Header del dropdown con el usuario */
+.memo-dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.9rem 1rem 0.7rem;
+}
+
+.memo-dropdown-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--sky);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    border: 3px solid var(--white);
+    box-shadow: 0 3px 0 #6ab5d8;
+    flex-shrink: 0;
+}
+
+.memo-dropdown-username {
+    color: var(--peach);
+    font-size: 0.88em;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Divider */
+.memo-dropdown-divider {
+    border: none;
+    border-top: 2px dashed #ffe4b5;
+    margin: 0.2rem 0.8rem;
+}
+
+/* Items del dropdown */
+.memo-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1rem;
+    color: #777;
+    text-decoration: none;
+    font-size: 0.85em;
+    font-weight: bold;
+    font-family: 'DynaPuff', system-ui, sans-serif;
+    transition: background 0.15s, color 0.15s;
+}
+
+.memo-dropdown-item i {
+    color: var(--sky);
+    font-size: 1em;
+    width: 18px;
+    text-align: center;
+    transition: color 0.15s;
+}
+
+.memo-dropdown-item:hover {
+    background: var(--cream);
+    color: var(--peach);
+}
+
+.memo-dropdown-item:hover i {
+    color: var(--peach);
+}
+
+.memo-dropdown-item:last-child {
+    border-radius: 0 0 17px 17px;
+}
+
+/* Logout — color diferente */
+.memo-dropdown-logout {
+    color: #e07070;
+}
+
+.memo-dropdown-logout i {
+    color: #e07070;
+}
+
+.memo-dropdown-logout:hover {
+    background: #fff0f0;
+    color: #c03030;
+}
+
+.memo-dropdown-logout:hover i {
+    color: #c03030;
+}
+
+/* ---------- Hamburger (mobile) ---------- */
+.memo-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+}
+
+.memo-hamburger span {
+    display: block;
+    width: 26px;
+    height: 3px;
+    background: var(--peach);
+    border-radius: 3px;
+    transition: all 0.3s;
+}
+
+/* Animación a X */
+.memo-hamburger.open span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.memo-hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.memo-hamburger.open span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* ---------- Mobile menu ---------- */
+.memo-mobile-menu {
+    display: none;
+    flex-direction: column;
+    padding: 0.5rem 0 0.8rem;
+    border-top: 2px dashed var(--cream);
+}
+
+.memo-mobile-menu.open {
+    display: flex;
+}
+
+.memo-mobile-link {
+    padding: 0.75rem 1.5rem;
+    color: var(--peach);
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: bold;
+    font-family: 'DynaPuff', system-ui, sans-serif;
+    transition: background 0.15s;
+}
+
+.memo-mobile-link:hover {
+    background: var(--cream);
+    color: var(--peach);
+}
+
+.memo-mobile-link i {
+    color: var(--sky);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+    .memo-nav-items {
+        display: none;
+    }
+
+    .memo-hamburger {
+        display: flex;
+    }
+}

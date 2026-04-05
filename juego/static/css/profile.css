@@ -1,0 +1,350 @@
+/* ---------- Hero card ---------- */
+.profile-hero {
+    background: var(--white);
+    border-radius: 30px;
+    box-shadow: 0 8px 0 var(--shadow);
+    border: 4px solid var(--white);
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+}
+
+/* ---------- Boton eliminar cuenta ---------- */
+.profile-delete-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    border: 3px solid #ffd0d0;
+    background: #fff2f2;
+    color: #d96a6a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 0 #e9b0b0;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s, color 0.2s;
+    z-index: 2;
+}
+
+.profile-delete-btn:hover {
+    background: #ffe4e4;
+    color: #c45656;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 #e0a1a1;
+}
+
+.profile-delete-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 0 #e0a1a1;
+}
+
+.profile-delete-btn i {
+    font-size: 0.95em;
+}
+
+/* ---------- Avatar en perfil ---------- */
+.profile-avatar-wrap {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* El avatar-circle-wrap del componente, adaptado al tamano del perfil */
+.profile-avatar-editable {
+    width: 96px;
+    height: 96px;
+    border-color: var(--peach) !important;
+    box-shadow: 0 6px 0 white !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* El contenido del avatar (icono o imagen) */
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--peach);
+    color: var(--white);
+    font-size: 2.4em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.profile-avatar-ring {
+    position: absolute;
+    inset: -7px;
+    border-radius: 50%;
+    border: 4px dashed var(--sky);
+    animation: spin-slow 12s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ---------- Username & joined ---------- */
+.profile-username {
+    color: var(--peach);
+    font-size: 1.6em;
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+}
+
+.profile-joined {
+    color: var(--sky);
+    font-size: 0.82em;
+    font-weight: bold;
+}
+
+/* ---------- Divider ---------- */
+.profile-divider {
+    border: none;
+    border-top: 2px dashed #ffe4b5;
+    margin: 1.4rem auto;
+    max-width: 500px;
+}
+
+/* ---------- Título "Mis estadísticas" ---------- */
+.profile-stats-title {
+    color: var(--peach);
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 1.2rem;
+}
+
+/* ---------- Fila de 5 cajitas ---------- */
+.profile-stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+}
+
+/* ---------- Cajita individual ---------- */
+.profile-stat-card {
+    background: var(--cream);
+    border-radius: 20px;
+    border: 4px solid var(--white);
+    padding: 1rem 0.8rem 0.8rem;
+    min-width: 110px;
+    flex: 1;
+    max-width: 150px;
+    box-shadow: 0 5px 0 var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+}
+
+.profile-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 9px 0 var(--shadow);
+}
+
+.profile-stat-icon {
+    font-size: 1.5em;
+    margin-bottom: 0.4rem;
+}
+
+.profile-stat-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+}
+
+.profile-stat-label {
+    font-size: 0.72em;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: bold;
+    opacity: 0.75;
+}
+
+/* Colores por tipo de stat */
+.stat-wins   { border-color: #ffd700 !important; }
+.stat-wins   .profile-stat-icon  { color: #c9a800; }
+.stat-wins   .profile-stat-value { color: #c9a800; }
+.stat-wins   .profile-stat-label { color: #c9a800; }
+
+.stat-losses { border-color: #ff9a9a !important; }
+.stat-losses .profile-stat-icon  { color: #e05555; }
+.stat-losses .profile-stat-value { color: #e05555; }
+.stat-losses .profile-stat-label { color: #e05555; }
+
+.stat-played { border-color: var(--sky) !important; }
+.stat-played .profile-stat-icon  { color: var(--sky); }
+.stat-played .profile-stat-value { color: var(--sky); }
+.stat-played .profile-stat-label { color: var(--sky); }
+
+.stat-time   { border-color: var(--mint) !important; }
+.stat-time   .profile-stat-icon  { color: #5ab8a0; }
+.stat-time   .profile-stat-value { color: #5ab8a0; }
+.stat-time   .profile-stat-label { color: #5ab8a0; }
+
+.stat-cat    { border-color: var(--peach) !important; }
+.stat-cat    .profile-stat-icon  { color: var(--peach); }
+.stat-cat    .profile-stat-value { color: var(--peach); font-size: 1.1em; }
+.stat-cat    .profile-stat-label { color: var(--peach); }
+
+/* ---------- Columnas del historial ---------- */
+.col-partida  { width: 60px;  text-align: center; }
+.col-puntaje  { width: 110px; text-align: center; }
+.col-estado   { width: 130px; }
+
+/* ---------- Badge de estado ---------- */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border-radius: 12px;
+    padding: 0.28rem 0.75rem;
+    font-size: 0.78em;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.status-win {
+    background: #eafaf3;
+    color: #2e9e68;
+    border: 2px solid #7ddcaa;
+}
+
+.status-loss {
+    background: #fff0f0;
+    color: #cc3333;
+    border: 2px solid #ffaaaa;
+}
+
+.status-abandoned {
+    background: #fffbe6;
+    color: #b38600;
+    border: 2px solid #ffe066;
+}
+
+/* Badge sin rango */
+.rank-none {
+    background: #f5f5f5;
+    color: #aaa;
+    border: 2px solid #ddd;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+    .profile-stats-row {
+        gap: 0.6rem;
+    }
+
+    .profile-stat-card {
+        min-width: 85px;
+        padding: 0.8rem 0.5rem 0.6rem;
+    }
+
+    .profile-stat-value {
+        font-size: 1.2em;
+    }
+
+    .profile-avatar-editable {
+        width: 76px;
+        height: 76px;
+    }
+    .profile-avatar {
+        font-size: 1.9em;
+    }
+}
+/* ---------- Paginación del historial ---------- */
+.pagination-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.2rem 1.2rem;
+    border-top: 2px dashed #ffe4b5;
+}
+
+.pagination-info {
+    color: #aaa;
+    font-size: 0.78em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pagination-btn {
+    min-width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    border: 3px solid var(--peach);
+    background: var(--white);
+    color: var(--peach);
+    font-family: 'DynaPuff', system-ui, sans-serif;
+    font-size: 0.82em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #d4886a;
+    transition: all 0.2s;
+    padding: 0 0.5rem;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: var(--peach);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #d4886a;
+}
+
+.pagination-btn:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #d4886a;
+}
+
+.pagination-btn.active {
+    background: var(--peach);
+    color: var(--white);
+    box-shadow: 0 4px 0 #d4886a;
+    cursor: default;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.pagination-arrow {
+    background: var(--cream);
+}
+
+.pagination-dots {
+    color: #bbb;
+    font-size: 0.9em;
+    padding: 0 0.2rem;
+    user-select: none;
+}
+
+@media (max-width: 600px) {
+    .pagination-btn {
+        min-width: 32px;
+        height: 32px;
+        font-size: 0.75em;
+        border-radius: 10px;
+    }
+}

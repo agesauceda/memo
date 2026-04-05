@@ -1,0 +1,123 @@
+<!-- Modal: Elegir / Editar Avatar -->
+<div class="modal fade" id="modalAvatar" tabindex="-1" aria-hidden="true"
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content modal-content-custom p-4 border-0" style="border-color: var(--sky) !important;">
+
+            <!-- Botón cerrar -->
+            <button class="btn-close-modal" onclick="avatarPicker.confirmarAbandonar()">
+                <i class="fas fa-xmark"></i>
+            </button>
+
+            <!-- Header -->
+            <div class="text-center mb-3">
+                <div style="font-size: 2em; line-height: 1;">
+                    <i class="fas fa-face-smile" style="color: var(--sky);"></i>
+                </div>
+                <h2 class="mt-1" style="color: var(--sky); font-size: 1.5em;" id="avatarPickerTitulo">Personaliza tu avatar</h2>
+
+                <!-- Indicador de pasos -->
+                <div class="avatar-steps-indicator">
+                    <div class="avatar-step-dot active" id="dot-1"></div>
+                    <div class="avatar-step-line" id="line-1-2"></div>
+                    <div class="avatar-step-dot" id="dot-2"></div>
+                    <div class="avatar-step-line" id="line-2-3"></div>
+                    <div class="avatar-step-dot" id="dot-3"></div>
+                </div>
+                <div class="avatar-step-label" id="stepLabel">Paso 1 — Elige el color de fondo</div>
+            </div>
+
+            <!-- ── PASO 1: Color de fondo ── -->
+            <div id="avatarStep1">
+                <p style="font-size: 0.8em; color: #aaa; text-align:center; margin-bottom: 1rem;">
+                    ¡Este color será el fondo de tu emoji!
+                </p>
+                <div class="avatar-color-grid" id="bgColorGrid"></div>
+                <div class="avatar-step-actions">
+                    <div></div>
+                    <button class="btn-auth" style="background: var(--sky); box-shadow: 0 6px 0 #6ab5d8; max-width: 180px;"
+                            onclick="avatarPicker.irPaso(2)">
+                        Siguiente <i class="fas fa-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── PASO 2: Ojos ── -->
+            <div id="avatarStep2" style="display:none;">
+                <p style="font-size: 0.8em; color: #aaa; text-align:center; margin-bottom: 1rem;">
+                    ¡Elige los ojos de tu emoji!
+                </p>
+                <div class="avatar-eyes-grid" id="eyesGrid"></div>
+                <div class="avatar-step-actions">
+                    <button class="btn-auth" style="background: #ccc; box-shadow: 0 6px 0 #aaa; max-width: 140px;"
+                            onclick="avatarPicker.irPaso(1)">
+                        <i class="fas fa-arrow-left me-1"></i> Atrás
+                    </button>
+                    <button class="btn-auth" style="background: var(--sky); box-shadow: 0 6px 0 #6ab5d8; max-width: 180px;"
+                            onclick="avatarPicker.irPaso(3)">
+                        Siguiente <i class="fas fa-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── PASO 3: Boca ── -->
+            <div id="avatarStep3" style="display:none;">
+                <p style="font-size: 0.8em; color: #aaa; text-align:center; margin-bottom: 1rem;">
+                    ¡Elige la boca de tu emoji!
+                </p>
+                <div class="avatar-mouth-grid" id="mouthGrid"></div>
+                <div class="avatar-step-actions">
+                    <button class="btn-auth" style="background: #ccc; box-shadow: 0 6px 0 #aaa; max-width: 140px;"
+                            onclick="avatarPicker.irPaso(2)">
+                        <i class="fas fa-arrow-left me-1"></i> Atrás
+                    </button>
+                    <button class="btn-auth" style="background: var(--mint); box-shadow: 0 6px 0 #7ab8a8; max-width: 180px;"
+                            id="btnConfirmarAvatar"
+                            onclick="avatarPicker.confirmar()">
+                        <i class="fas fa-check me-1"></i> ¡Listo!
+                    </button>
+                </div>
+            </div>
+
+            <!-- Preview lateral fijo -->
+            <div class="avatar-live-preview" id="avatarLivePreview">
+                <div style="font-size: 0.7em; color: #aaa; margin-bottom: 6px; text-align:center;">Preview</div>
+                <div class="avatar-preview-circle">
+                    <img id="avatarPreviewModal" src="" alt="preview" width="70" height="70"
+                         style="border-radius: 50%; display:block;">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal: Confirmar abandonar avatar (solo en registro, se oculta en edición) -->
+<div class="modal fade" id="modalAbandonarAvatar" tabindex="-1" aria-hidden="true"
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-custom p-4 border-0" style="border-color: var(--peach) !important;">
+            <div class="text-center">
+                <div style="font-size: 2.5em;"><i class="fas fa-triangle-exclamation" style="color: var(--peach);"></i></div>
+                <h2 class="mt-2" style="color: var(--peach); font-size: 1.4em;" id="abandonarTitulo">¿Salir sin guardar?</h2>
+                <p style="font-size: 0.85em; color: #aaa; font-weight: normal;" id="abandonarSubtitulo">
+                    Si sales ahora, se asignará un avatar aleatorio.<br>
+                </p>
+                <div class="d-flex gap-3 justify-content-center mt-3">
+                    <button class="btn-auth"
+                            style="background: #ccc; box-shadow: 0 6px 0 #aaa; max-width: 160px;"
+                            onclick="avatarPicker.volverDesdeAbandono()">
+                        <i class="fas fa-arrow-left me-1"></i> Volver
+                    </button>
+                    <button class="btn-auth"
+                            style="background: var(--peach); box-shadow: 0 6px 0 #d4886a; max-width: 160px;"
+                            id="btnAbandonarConfirmar"
+                            onclick="avatarPicker.abandonar()">
+                        <i class="fas fa-right-from-bracket me-1"></i> Salir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game | Login</title>
+    
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon/favicon.ico' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/toasts.css' %}">
+</head>
+
+<body class="auth-page">
+
+    <!-- Burbujas decorativas -->
+    <div class="auth-bubble b1"></div>
+    <div class="auth-bubble b2"></div>
+    <div class="auth-bubble b3"></div>
+
+    <div class="auth-card">
+
+        <!-- Logo / título -->
+        <div class="text-center mb-4">
+            <div style="font-size: 3em; line-height: 1;">
+                <i class="fas fa-brain" style="color: var(--sky);"></i>
+            </div>
+            <h1 class="auth-title mt-2">Memory Game</h1>
+            <p class="auth-subtitle">
+                <i class="fas fa-lock me-1"></i> Inicia sesión para jugar
+            </p>
+        </div>
+
+        <!-- Formulario -->
+        <form id="loginForm" novalidate>
+
+            <!-- Usuario -->
+            <div class="mb-3">
+                <label class="auth-label" for="username">
+                    <i class="fas fa-user me-1"></i> Usuario
+                </label>
+                <input
+                    type="text"
+                    id="username"
+                    class="auth-input"
+                    placeholder="tu_usuario"
+                    autocomplete="username">
+                <div class="auth-feedback" id="err-username"></div>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="mb-4">
+                <label class="auth-label" for="password">
+                    <i class="fas fa-key me-1"></i> Contraseña
+                </label>
+                <div class="auth-input-wrap">
+                    <input
+                        type="password"
+                        id="password"
+                        class="auth-input"
+                        placeholder="••••••••"
+                        autocomplete="current-password">
+                    <button type="button" class="toggle-pw" onclick="mostrarOcultarContrasena('password', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="auth-feedback" id="err-password"></div>
+            </div>
+
+            <!-- Botón -->
+            <button type="submit" class="btn-auth">
+                <i class="fas fa-gamepad me-2"></i> Iniciar sesión
+            </button>
+
+        </form>
+
+        <hr class="auth-divider">
+
+        <!-- Links -->
+        <div class="auth-links">
+            <a href="/registro/">
+                <i class="fas fa-user-plus me-1"></i> Crear cuenta
+            </a>
+            <span>|</span>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#recoverModal">
+                <i class="fas fa-envelope me-1"></i> Olvidé mi contraseña
+            </a>
+        </div>
+
+    </div><!-- /auth-card -->
+
+
+    <!-- ── Modal: Recuperar contraseña ── -->
+    <div class="modal fade" id="recoverModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-custom p-4 border-0">
+
+                <div class="text-center mb-3">
+                    <div style="font-size: 2.5em;">
+                        <i class="fas fa-envelope-open-text" style="color: var(--sky);"></i>
+                    </div>
+                    <h2 class="mt-2">Recuperar cuenta</h2>
+                    <p style="font-size: 0.9em; color: #aaa; font-weight: normal;">
+                        Te enviaremos un enlace a tu correo.
+                    </p>
+                </div>
+
+                <div class="mb-3">
+                    <label class="auth-label" for="recoverEmail">
+                        <i class="fas fa-at me-1"></i> Correo electrónico
+                    </label>
+                    <input
+                        type="email"
+                        id="recoverEmail"
+                        class="auth-input"
+                        placeholder="correo@ejemplo.com">
+                    <div class="auth-feedback" id="err-recover">
+                        Ingresa un correo válido.
+                    </div>
+                </div>
+
+                <button class="btn-auth" onclick="enviarRecuperacion()">
+                    <i class="fas fa-paper-plane me-2"></i> Enviar enlace
+                </button>
+
+                <div class="text-center mt-3">
+                    <button
+                        type="button"
+                        class="resend-link"
+                        data-bs-dismiss="modal">
+                        <i class="fas fa-arrow-left me-1"></i> Volver al login
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Modal: Verificación OTP — Recuperación ── -->
+    <div class="modal fade" id="resetOtpModal" tabindex="-1" aria-hidden="true"
+         data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-custom p-4 border-0">
+
+                <div class="text-center mb-2">
+                    <div style="font-size: 2.8em; line-height: 1;">
+                        <i class="fas fa-key" style="color: var(--sky);"></i>
+                    </div>
+                    <h2 class="mt-2" style="color: var(--sky);">Restablecer contraseña</h2>
+                    <p style="font-size: 0.88em; color: #aaa; font-weight: normal;">
+                        Ingresa el código de 4 dígitos que enviamos a tu correo<br>y tu nueva contraseña.
+                    </p>
+                </div>
+
+                <div class="otp-wrap">
+                    <input class="otp-input" type="text" maxlength="1" inputmode="numeric" id="resetOtp1">
+                    <input class="otp-input" type="text" maxlength="1" inputmode="numeric" id="resetOtp2">
+                    <input class="otp-input" type="text" maxlength="1" inputmode="numeric" id="resetOtp3">
+                    <input class="otp-input" type="text" maxlength="1" inputmode="numeric" id="resetOtp4">
+                </div>
+
+                <div class="mb-3 mt-3">
+                    <label class="auth-label" for="resetNewPassword">
+                        <i class="fas fa-lock me-1"></i> Nueva contraseña
+                    </label>
+                    <div class="auth-input-wrap">
+                        <input type="password" id="resetNewPassword" class="auth-input" placeholder="Mínimo 6 caracteres">
+                        <button type="button" class="toggle-pw" onclick="mostrarOcultarContrasena('resetNewPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="auth-feedback text-center" id="err-reset-otp" style="display:none;">
+                    Código incorrecto. Intenta de nuevo.
+                </div>
+
+                <button class="btn-auth mt-2"
+                        style="background: var(--sky); box-shadow: 0 6px 0 #6aaac8;"
+                        onclick="verificarOtpReset()">
+                    <i class="fas fa-check-circle me-2"></i> Confirmar
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    {% include 'components/toasts.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/toasts.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+</body>
+</html>

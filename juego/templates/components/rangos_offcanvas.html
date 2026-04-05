@@ -1,0 +1,89 @@
+﻿{% load static %}
+
+<!-- Boton flotante disparador -->
+<button class="rangos-trigger-btn"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#rangosOffcanvas"
+        aria-controls="rangosOffcanvas"
+        title="Ver tabla de rangos">
+    <i class="fas fa-trophy"></i>
+    <span>Rangos</span>
+</button>
+
+<!-- Offcanvas Bootstrap: panel lateral desde mitad de pantalla -->
+<div class="offcanvas offcanvas-end rangos-offcanvas"
+     tabindex="-1"
+     id="rangosOffcanvas"
+     aria-labelledby="rangosOffcanvasLabel">
+
+    <div class="offcanvas-header rangos-header">
+        <div class="rangos-title" id="rangosOffcanvasLabel">
+            <i class="fas fa-trophy"></i>
+            Tabla de Rangos
+        </div>
+        <button class="rangos-close-btn" type="button" data-bs-dismiss="offcanvas" aria-label="Cerrar">
+            <i class="fas fa-xmark"></i>
+        </button>
+    </div>
+
+    <div class="offcanvas-body rangos-body">
+        
+        <p class="rangos-desc">
+            <i class="fas fa-circle-info"></i>
+            Tu rango depende de tu <strong>mejor puntaje</strong> acumulado.
+        </p>
+
+        <p class="rangos-desc-motivacion">
+            ¡Sigue jugando para subir!
+        </p>
+
+        <div class="rangos-lista">
+
+            <div class="rango-card rango-sin-rango">
+                <div class="rango-icon-wrap"><i class="fas fa-circle-question"></i></div>
+                <div class="rango-info">
+                    <span class="rango-nombre">Sin Rango</span>
+                    <span class="rango-pts">0 - 499 pts</span>
+                    <span class="rango-tip">¡Tu aventura comienza aquí!</span>
+                </div>
+                <div class="rango-num">1°</div>
+            </div>
+
+            <div class="rango-card rango-bronce">
+                <div class="rango-icon-wrap"><i class="fas fa-medal"></i></div>
+                <div class="rango-info">
+                    <span class="rango-nombre">Bronce</span>
+                    <span class="rango-pts">500 - 999 pts</span>
+                    <span class="rango-tip">¡Vas agarrando ritmo!</span>
+                </div>
+                <div class="rango-num">2°</div>
+            </div>
+
+            <div class="rango-card rango-plata">
+                <div class="rango-icon-wrap"><i class="fas fa-medal"></i></div>
+                <div class="rango-info">
+                    <span class="rango-nombre">Plata</span>
+                    <span class="rango-pts">1000 - 2999 pts</span>
+                    <span class="rango-tip">¡Vas muy bien, no pares!</span>
+                </div>
+                <div class="rango-num">3°</div>
+            </div>
+
+            <div class="rango-card rango-oro">
+                <div class="rango-icon-wrap"><i class="fas fa-medal"></i></div>
+                <div class="rango-info">
+                    <span class="rango-nombre">Oro</span>
+                    <span class="rango-pts">3000 - 5000 pts</span>
+                    <span class="rango-tip">¡Eres parte de los mejores!</span>
+                </div>
+                <div class="rango-num">4°</div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="{% static 'css/rangos_offcanvas.css' %}">
+<script src="{% static 'js/rangos_offcanvas.js' %}"></script>
