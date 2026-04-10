@@ -1,5 +1,21 @@
+/**
+ * Categoría actualmente activa en el scoreboard.
+ * Puede ser 'global' o el nombre de una categoría específica.
+ */
+
 let tabActiva = 'global';
+
+/**
+ * Array que almacena todos los datos del scoreboard obtenidos del backend.
+ */
 let datosScoreboard = [];
+
+/**
+ * Convierte un tiempo en segundos a formato MM:SS.
+ * 
+ * @param {number} segundosRaw - Tiempo en segundos (puede ser null o undefined)
+ * @returns {string} Tiempo formateado en minutos y segundos (ej: "2:05")
+ */
 
 function formatearTiempoMMSS(segundosRaw) {
     const total = Math.max(0, Math.round(segundosRaw || 0));
@@ -8,9 +24,23 @@ function formatearTiempoMMSS(segundosRaw) {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
+/**
+ * Evento que se ejecuta cuando el DOM está completamente cargado.
+ * Inicia la carga del scoreboard.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     cargarScoreboard();
 });
+
+/**
+ * Obtiene los datos del scoreboard desde el backend.
+ * 
+ * Endpoint: /api/scoreboard/
+ * 
+ * - Si la respuesta es válida, guarda los datos globalmente
+ *   y renderiza la tabla y el podio.
+ * - Si falla, muestra error en consola.
+ */
 
 function cargarScoreboard() {
     fetch('/api/scoreboard/')
@@ -27,16 +57,30 @@ function cargarScoreboard() {
         .catch(err => console.error('Error en fetch scoreboard:', err));
 }
 
+/**
+ * Cambia la pestaña activa del scoreboard.
+ * 
+ * @param {HTMLElement} btn - Botón que fue presionado
+ * @param {string} categoria - Categoría a mostrar
+ */
 function cambiarTab(btn, categoria) {
     tabActiva = categoria;
 
+     // Quita la clase activa de todos los tabs
     document.querySelectorAll('.sb-tab').forEach(t => t.classList.remove('active'));
+      // Activa el botón seleccionado
     btn.classList.add('active');
-
+      // Renderiza datos según la nueva categoría
     renderizarTabla(categoria);
     renderizarPodio(categoria);
 }
 
+/**
+ * Filtra y ordena los datos del scoreboard según la categoría.
+ * 
+ * @param {string} categoria - 'global' o nombre de categoría
+ * @returns {Array} Lista ordenada por puntaje descendente
+ */
 function filtrarDatos(categoria) {
     if (categoria === 'global') {
         return [...datosScoreboard].sort((a, b) => b.puntaje - a.puntaje);
@@ -46,13 +90,20 @@ function filtrarDatos(categoria) {
         .sort((a, b) => b.puntaje - a.puntaje);
 }
 
+/**
+ * Renderiza el podio (top 3 jugadores).
+ * 
+ * NOTA:
+ * La visualización depende del HTML:
+ * - Centro = 1er lugar
+ * - Izquierda = 2do lugar
+ * - Derecha = 3er lugar
+ * 
+ * @param {string} categoria
+ */
 function renderizarPodio(categoria) {
     const datos = filtrarDatos(categoria).slice(0, 3);
-
-    // visual: 2° | 1° | 3°
-    // datos[0]=1er lugar → podium-2 (centro HTML)
-    // datos[1]=2do lugar → podium-1 (izquierda HTML)  
-    // datos[2]=3er lugar → podium-3 (derecha HTML)
+      // Mapeo entre posición lógica y posición visual
     const mapa = [
     { podiumId: 1, dataIdx: 0 },  // centro con corona = 1° lugar → datos[0]
     { podiumId: 2, dataIdx: 1 },  // izquierda = 2° lugar → datos[1]
@@ -79,6 +130,7 @@ function renderizarPodio(categoria) {
                 }
             }
         } else {
+             // Si no hay datos para esa posición
             nombre.textContent = '—';
             cat.textContent = '—';
             puntaje.textContent = '—';
@@ -86,7 +138,11 @@ function renderizarPodio(categoria) {
         }
     });
 }
-
+/**
+ * Renderiza la tabla completa del scoreboard.
+ * 
+ * @param {string} categoria
+ */
 function renderizarTabla(categoria) {
     const datos = filtrarDatos(categoria);
     const cuerpo = document.getElementById('cuerpoTabla');
@@ -104,7 +160,7 @@ function renderizarTabla(categoria) {
             </tr>`;
         return;
     }
-
+     // Render de filas
     cuerpo.innerHTML = datos.map((entrada, i) => {
         const clasesFila = i === 0 ? 'row-first' : i === 1 ? 'row-second' : i === 2 ? 'row-third' : '';
         const mins = Math.floor(entrada.tiempo_jugado / 60);
@@ -147,12 +203,19 @@ function renderizarTabla(categoria) {
     }).join('');
 }
 
+/**
+ * Carga un mini scoreboard (Top 5) para una categoría específica.
+ * 
+ * @param {string} categoria - (no se usa directamente, posible redundancia)
+ * @param {string} nombreCategoria - Nombre exacto de la categoría
+ */
+
 function cargarMiniScoreboard(categoria, nombreCategoria) {
     const titulo = document.getElementById('miniScoreboardTitulo');
     const cuerpo = document.getElementById('miniScoreboardCuerpo');
 
     if (!titulo || !cuerpo) return;
-
+     // Estado de carga
     titulo.innerHTML = `<i class="fas fa-ranking-star me-2"></i> Top ${nombreCategoria}`;
     cuerpo.innerHTML = `
         <tr>
