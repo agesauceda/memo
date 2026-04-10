@@ -24,6 +24,13 @@ let seleccionEnModal = false;
 
 let musicaFondo = null;
 
+/**
+ * La función `reproducirMusicaFondo` reproduce música de fondo con un archivo especificado y nivel de volumen,
+ * en bucle continuo.
+ * @param archivo - El parámetro `archivo` en la función `reproducirMusicaFondo` representa el nombre
+ * o ruta del archivo de música que deseas reproducir como música de fondo. Se utiliza para cargar dinámicamente
+ * y reproducir el archivo de música especificado para la reproducción de fondo.
+ */
 function reproducirMusicaFondo(archivo) {
     if (musicaFondo) {
         musicaFondo.pause();
@@ -35,6 +42,9 @@ function reproducirMusicaFondo(archivo) {
     musicaFondo.play();
 }
 
+/**
+ * La función `detenerMusicaFondo` detiene la música de fondo si está reproduciéndose actualmente.
+ */
 function detenerMusicaFondo() {
     if (musicaFondo) {
         musicaFondo.pause();
@@ -42,15 +52,35 @@ function detenerMusicaFondo() {
     }
 }
 
+/**
+ * La función `reproducirSonido` reproduce un archivo de sonido ubicado en el directorio `/static/music/`.
+ * @param archivo - El parámetro `archivo` en la función `reproducirSonido` es una cadena que
+ * representa el nombre del archivo de sonido que se va a reproducir.
+ */
 function reproducirSonido(archivo) {
     const audio = new Audio(`/static/music/${archivo}`);
     audio.play();
 }
 
+/**
+ * La función `hayPartidaEnCurso` verifica si hay un temporizador activo y una categoría seleccionada en un
+ * programa de JavaScript.
+ * @returns La función `hayPartidaEnCurso()` está devolviendo un valor booleano basado en las condiciones
+ * `timerActivo` y `categoriaId`. Si `timerActivo` es true y `categoriaId` no es null, la
+ * función devolverá `true`, indicando que hay una sesión de juego en curso. De lo contrario, devolverá
+ * `false`.
+ */
 function hayPartidaEnCurso() {
     return timerActivo && categoriaId !== null;
 }
 
+/**
+ * La función `pedirConfirmacionAbandono` muestra un modal para confirmar salir de una página y detiene un
+ * temporizador si está activo.
+ * @param [urlDestino=null] - El parámetro `urlDestino` es una variable que representa la URL de destino
+ * donde el usuario será redirigido después de confirmar la acción de abandono. Es opcional y
+ * por defecto es `null` si no se proporciona.
+ */
 function pedirConfirmacionAbandono(urlDestino = null) {
     urlPendienteAbandono = urlDestino;
     if (!modalAbandonar) {
@@ -62,6 +92,11 @@ function pedirConfirmacionAbandono(urlDestino = null) {
     modalAbandonar.show();
 }
 
+/**
+ * La función `confirmarAbandono` maneja las acciones cuando un usuario confirma abandonar un juego, incluyendo
+ * ocultar un modal, detener un temporizador, guardar el progreso del juego y redirigir a una nueva URL o restablecer
+ * el estado del juego.
+ */
 function confirmarAbandono() {
     modalAbandonar.hide();
 
@@ -82,6 +117,10 @@ function confirmarAbandono() {
     }
 }
 
+/**
+ * La función `cancelarAbandono` oculta un modal, restablece una variable de URL y inicia una cuenta regresiva de temporizador
+ * si se cumple una condición.
+ */
 function cancelarAbandono() {
     modalAbandonar.hide();
     urlPendienteAbandono = null;
@@ -101,6 +140,10 @@ function cancelarAbandono() {
     }
 }
 
+/**
+ * La función `resetearEstadoJuego` restablece todas las variables y elementos del estado del juego a sus valores
+ * iniciales.
+ */
 function resetearEstadoJuego() {
     detenerMusicaFondo();
 
@@ -132,6 +175,24 @@ function resetearEstadoJuego() {
     actualizarEstadisticas();
 }
 
+/**
+ * La función `seleccionarCategoria` configura una categoría seleccionada en un modal, actualiza algunas variables,
+ * oculta el modal, carga un mini marcador, recupera cartas y reproduce música de fondo basada en el
+ * nivel de la categoría.
+ * @param id - El parámetro `id` en la función `seleccionarCategoria` representa el identificador único
+ * de la categoría que se está seleccionando. Se utiliza para identificar la categoría dentro de la función
+ * y realizar acciones específicas basadas en este identificador.
+ * @param label - El parámetro `label` en la función `seleccionarCategoria` se utiliza para especificar la
+ * etiqueta o nombre de la categoría que se está seleccionando. Se muestra en la página web para informar al usuario
+ * sobre la categoría seleccionada.
+ * @param intentos - El parámetro `intentos` en la función `seleccionarCategoria` representa el número
+ * máximo de intentos o intentos permitidos para que el usuario complete una tarea o resuelva un desafío
+ * dentro de la categoría seleccionada. Se utiliza para establecer la variable `intentosMax`, que almacena este
+ * número máximo de intentos
+ * @param tiempo - El parámetro `tiempo` en la función `seleccionarCategoria` representa el límite de tiempo
+ * o restricción de tiempo para una categoría particular en un juego o aplicación. Especifica el
+ * tiempo máximo permitido para que el usuario complete una tarea o actividad relacionada con esa categoría.
+ */
 function seleccionarCategoria(id, label, intentos, tiempo) {
     seleccionEnModal = true;
     categoriaId = id;
@@ -157,6 +218,9 @@ function seleccionarCategoria(id, label, intentos, tiempo) {
     reproducirMusicaFondo(musicaPorNivel[id]);
 }
 
+/**
+ * La función `obtenerCartas` obtiene las cartas de la categoría seleccionada desde la API y construye el tablero si la respuesta es exitosa.
+ */
 function obtenerCartas() {
     fetch(`/api/cartas/${categoriaId}/`)
         .then(res => res.json())
@@ -170,7 +234,10 @@ function obtenerCartas() {
         .catch(err => console.error('Error en fetch cartas:', err));
 }
 
-
+/**
+ * La función `construirTablero` construye el tablero de juego con las cartas proporcionadas, barajándolas y creando elementos HTML para cada carta.
+ * @param cartas - El parámetro `cartas` es un arreglo de objetos que representan las cartas a incluir en el tablero.
+ */
 function construirTablero(cartas) {
     const tablero = document.getElementById('tablero');
     tablero.innerHTML = '';
@@ -220,7 +287,9 @@ function construirTablero(cartas) {
     }, 5000);
 }
 
-
+/**
+ * La función `voltearCarta` maneja el evento de clic en una carta, volteándola si es posible y verificando si se ha formado un par.
+ */
 function voltearCarta() {
     if (!turnoActivo) return;
 
@@ -241,6 +310,9 @@ function voltearCarta() {
     }
 }
 
+/**
+ * La función `verificarPar` verifica si las dos cartas volteadas forman un par, actualizando el estado del juego en consecuencia.
+ */
 function verificarPar() {
     const esPar = primeraCarta.dataset.parId === segundaCarta.dataset.parId;
 
@@ -270,6 +342,9 @@ function verificarPar() {
     }
 }
 
+/**
+ * La función `iniciarTimer` inicia el temporizador de cuenta regresiva para el límite de tiempo del juego.
+ */
 function iniciarTimer() {
     timerActivo = true;
     segundos = tiempoLimite;
@@ -284,9 +359,12 @@ function iniciarTimer() {
             actualizarEstadisticas();
             terminarJuego('Perdida', 'tiempo');
         }
+
     }, 1000);
 }
-
+/**
+ * La función `actualizarEstadisticas` actualiza la visualización de las estadísticas del juego, incluyendo movimientos, pares, tiempo e intentos restantes.
+ */
 function actualizarEstadisticas() {
     const mins = Math.floor(segundos / 60);
     const secs = segundos % 60;
@@ -294,9 +372,14 @@ function actualizarEstadisticas() {
     document.getElementById('movimientos').textContent = movimientos;
     document.getElementById('pares').textContent = `${paresEncontrados}/${totalPares}`;
     document.getElementById('tiempo').textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
     document.getElementById('intentos').textContent = intentosRestantes || '—';
 }
-
+/**
+ * La función `terminarJuego` finaliza el juego con el estado especificado, calcula el puntaje, guarda la partida y muestra el modal correspondiente.
+ * @param estado - El parámetro `estado` indica el resultado del juego ('Ganada' o 'Perdida').
+ * @param causaPerdida - El parámetro `causaPerdida` especifica la razón de la pérdida ('intentos' o 'tiempo'), por defecto 'intentos'.
+ */
 function terminarJuego(estado, causaPerdida = 'intentos') {
     clearInterval(intervaloTimer);
     timerActivo = false;
@@ -328,6 +411,7 @@ function terminarJuego(estado, causaPerdida = 'intentos') {
         } else {
             if (!modalPerdisteIntentos) {
                 modalPerdisteIntentos = new bootstrap.Modal(document.getElementById('modalPerdisteIntentos'));
+
             }
             detenerMusicaFondo();
             reproducirSonido('lose.ogg');
@@ -335,7 +419,11 @@ function terminarJuego(estado, causaPerdida = 'intentos') {
         }
     }
 }
-
+/**
+ * La función `calcularPuntaje` calcula el puntaje de la partida basada en el estado del juego y los bonos aplicables.
+ * @param estado - El parámetro `estado` indica si el juego fue ganado o perdido.
+ * @returns Un objeto con el puntaje total, puntaje base, bono de tiempo y bono de movimientos.
+ */
 function calcularPuntaje(estado) {
     if (estado !== 'Ganada') return { puntaje: 0, base: 0, bTiempo: 0, bMov: 0 };
 
@@ -353,7 +441,11 @@ function calcularPuntaje(estado) {
 
     return { puntaje, base: cfg.base, bTiempo, bMov };
 }
-
+/**
+ * La función `guardarPartida` guarda los datos de la partida actual en el servidor mediante una solicitud POST.
+ * @param estado - El parámetro `estado` representa el estado de la partida ('Ganada', 'Perdida', 'Abandonada').
+ * @param puntaje - El parámetro `puntaje` es el puntaje obtenido en la partida.
+ */
 function guardarPartida(estado, puntaje) {
     const tiempoJugado = tiempoLimite - segundos;
 
@@ -366,6 +458,7 @@ function guardarPartida(estado, puntaje) {
     formData.append('puntaje', puntaje);
 
     fetch('/api/guardar_partida/', {
+
         method: 'POST',
         body: formData
     })
@@ -375,9 +468,12 @@ function guardarPartida(estado, puntaje) {
     })
     .catch(err => console.error('Error en fetch guardar_partida:', err));
 }
-
+/**
+ * La función `nuevaPartida` inicia una nueva partida, ocultando modales y verificando si hay una partida en curso para pedir confirmación.
+ */
 function nuevaPartida() {
     if (modalGanaste) modalGanaste.hide();
+
     if (modalPerdisteIntentos) modalPerdisteIntentos.hide();
     if (modalPerdisteTiempo) modalPerdisteTiempo.hide();
 
@@ -390,7 +486,9 @@ function nuevaPartida() {
 
     cargarCategorias();
 }
-
+/**
+ * La función `reiniciarEstado` reinicia las variables de estado del juego para preparar una nueva ronda.
+ */
 function reiniciarEstado() {
     primeraCarta = null;
     segundaCarta = null;
@@ -403,13 +501,19 @@ function reiniciarEstado() {
     clearInterval(intervaloTimer);
     actualizarEstadisticas();
 }
-
+/**
+ * La función `reiniciarCartas` reinicia las variables relacionadas con las cartas volteadas para permitir nuevos movimientos.
+ */
 function reiniciarCartas() {
     primeraCarta = null;
     segundaCarta = null;
     turnoActivo = true;
 }
 
+/**
+ * Event listener para 'DOMContentLoaded' que inicializa la aplicación cargando categorías y configurando
+ * el manejo de clics para prevenir navegación durante una partida en curso.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     cargarCategorias();
 
@@ -429,6 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pedirConfirmacionAbandono(href);
 
         history.pushState(null, '', window.location.href);
+
         window.addEventListener('popstate', (e) => {
             if (hayPartidaEnCurso()) {
                 history.pushState(null, '', window.location.href);
@@ -437,7 +542,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, true); 
 });
-
+/**
+ * La función `cargarCategorias` carga las categorías disponibles desde la API y las muestra en la interfaz de usuario.
+ */
 function cargarCategorias() {
     fetch('/api/categorias/')
         .then(res => res.json())
@@ -489,6 +596,7 @@ function cargarCategorias() {
                 modalInstr.show();
             }
 
+
             btnIniciar.onclick = () => {
                 modalInstr.hide();
                 seleccionEnModal = false;
@@ -500,6 +608,11 @@ function cargarCategorias() {
         });
 }
 
+/**
+ * La función `cargarMiniScoreboard` carga y muestra el marcador de la categoría seleccionada en el mini scoreboard.
+ * @param categoriaId - El parámetro `categoriaId` es el identificador de la categoría para la que se carga el marcador.
+ * @param nombreCategoria - El parámetro `nombreCategoria` es el nombre de la categoría a mostrar en el título del marcador.
+ */
 function cargarMiniScoreboard(categoriaId, nombreCategoria) {
     const titulo = document.getElementById('miniScoreboardTitulo');
     const cuerpo = document.getElementById('miniScoreboardCuerpo');
