@@ -1,8 +1,3 @@
-[10:02 pm, 8/4/2026] +504 9864-5921: SECRET_KEY=django-insecure-_v^2=9sgs^#11lsbv0=92#$l+if4z+325uyz0y=sns&s62p-!a
-DB_NAME=memo_db
-DB_PASSWORD=7654321
-EMAIL_HOST_PASSWORD=owac kirf osen eaaq
-[10:03 pm, 8/4/2026] +504 9864-5921: Y este es el contenido de datos_iniciales.sql:
 -- MySQL dump 10.13  Distrib 8.0.45, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: memo_db
