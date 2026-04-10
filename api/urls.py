@@ -1,6 +1,9 @@
 from django.urls import path
 from . import views
 
+# Este bloque de código define los patrones de URL para tu aplicación Django. Cada llamada a la función `path`
+# especifica un patrón de URL junto con la función de vista correspondiente que debe ser llamada cuando se accede a esa
+# URL.
 urlpatterns = [
     path('login/', views.login, name='api_login'),
     path('registro/', views.registro, name='api_registro'),
