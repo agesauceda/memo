@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="es">
+<!--
+    HEAD — Metadatos, fuentes y hojas de estilo
+    Carga charset, viewport, favicon, Bootstrap 5.3.3, Font Awesome 6.4.0,
+    Google Fonts (DynaPuff) y los CSS propios: styles, navbar, scoreboard y toasts.
+-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,22 +33,30 @@
 
 <body class="py-0">
 
-    <!-- Navbar -->
+    <!-- Navbar y offcanvas de rangos, presentes en todas las vistas -->
     {% include 'components/navbar.html' %}
     {% include 'components/rangos_offcanvas.html' %}
 
-    <!-- Burbujas decorativas -->
+    <!-- Burbujas decorativas de fondo, solo visuales -->
     <div class="auth-bubble b4"></div>
     <div class="auth-bubble b2"></div>
     <div class="auth-bubble b6"></div>
 
+    <!--
+        Contenedor principal — layout de dos columnas (lg: 7/5, sm: apiladas)
+        Columna izquierda: header de estadísticas + tablero de juego
+        Columna derecha: botón nueva partida + mini scoreboard
+    -->
     <div class="container-fluid px-3 px-md-4 mt-1" style="max-width: 1200px; position: relative; z-index: 1;">
 
         <div class="row g-4 align-items-start">
 
             <!-- Columna izquierda: Header + Tablero -->
             <div class="col-12 col-lg-7">
-
+                <!--
+                    Header de estadísticas — game.js actualiza estos valores en tiempo real:
+                    #movimientos, #tiempo (m:ss), #pares (ej. 3/8), #intentos
+                -->
                 <div class="header-card p-2 mb-3 text-center">
                     <h1 class="mb-1">Memo</h1>
                     <p class="mb-1" style="color: var(--sky); font-size: 0.95em; font-weight: bold;">
@@ -69,20 +82,27 @@
                         </div>
                     </div>
                 </div>
-
+                <!-- Tablero — grid 4 columnas, game.js inyecta las 16 cartas al iniciar -->
                 <div class="row row-cols-4 g-2" id="tablero"></div>
 
             </div>
 
             <!-- Columna derecha: Botón + Scoreboard -->
             <div class="col-12 col-lg-5">
-
+                <!--
+                    Botón nueva partida — llama a nuevaPartida() en game.js.
+                    Si hay partida activa, abre el modal de abandono primero.
+                -->
                 <div class="mb-4">
                     <button class="btn btn-game px-4 py-3 w-100" onclick="nuevaPartida()">
                         <i class="fas fa-redo me-2"></i> Nueva partida
                     </button>
                 </div>
 
+                <!--
+                    Mini scoreboard — top del nivel activo.
+                    game.js popula #miniScoreboardCuerpo con filas <tr> al elegir categoría.
+                -->
                 <div class="sb-card">
                     <div class="sb-card-header" id="miniScoreboardTitulo">
                         <i class="fas fa-ranking-star me-2"></i> Top del nivel
@@ -116,6 +136,11 @@
     </div><!-- /container -->
 
     <!-- Modal: Elegir categoría -->
+    <!--
+        Modal: Selección de categoría
+        Se abre al llamar nuevaPartida(). game.js carga los niveles del backend
+        y los inyecta en #listaCategorias. Sin backdrop estático, se puede cerrar sin elegir.
+    -->
     <div class="modal fade" id="modalCategoria"
          tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -140,6 +165,11 @@
     </div>
 
     <!-- Modal: Ganaste -->
+    <!--
+        Modal: Ganaste
+        Backdrop estático. game.js inyecta el desglose en:
+        #finalBase, #finalBonusTiempo, #finalBonusMov, #finalPuntaje
+    -->
     <div class="modal fade" id="modalGanaste" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom p-4 text-center border-0">
@@ -180,6 +210,10 @@
     </div>
  
     <!-- Modal: Perdiste (sin intentos) -->
+    <!--
+        Modal: Sin intentos
+        Se activa cuando el contador de intentos llega a 0. Registra 0 pts automáticamente.
+    -->
     <div class="modal fade" id="modalPerdisteIntentos" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom p-4 text-center border-0">
@@ -206,6 +240,10 @@
     </div>
  
     <!-- Modal: Perdiste (tiempo agotado) -->
+    <!--
+        Modal: Tiempo agotado
+        Se activa cuando el cronómetro llega a 0. Registra 0 pts automáticamente.
+    -->
     <div class="modal fade" id="modalPerdisteTiempo" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom p-4 text-center border-0">
@@ -232,6 +270,12 @@
     </div>
 
     <!-- Modal: Confirmar abandono -->
+    <!--
+        Modal: Confirmar abandono
+        Backdrop estático. Advierte que la partida se guardará como Abandonada (0 pts).
+        confirmarAbandono() cancela la partida y abre el selector de categoría.
+        cancelarAbandono() cierra el modal y retoma la partida en curso.
+    -->
     <div class="modal fade" id="modalAbandonar" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom p-4 text-center border-0"
@@ -265,6 +309,12 @@
     {% include 'components/toasts.html' %}
 
     <!-- Bootstrap JS -->
+    <!--
+        Scripts — cargados al final para no bloquear el render.
+        bootstrap.bundle: necesario para los modales.
+        toasts.js: funciones de notificaciones (showToast, etc.)
+        game.js: lógica principal del juego (tablero, turnos, puntaje, backend)
+    -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/toasts.js' %}"></script>
     <script src="{% static 'js/game.js' %}"></script>
