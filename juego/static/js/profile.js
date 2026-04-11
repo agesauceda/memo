@@ -2,6 +2,11 @@
 let paginaActual = 1;
 let _usuarioActual = null; 
 
+/*
+    Variables globales:
+    - paginaActual: almacena la página actual del historial de partidas.
+    - _usuarioActual: contiene los datos del usuario cargado desde el servidor.
+*/
 document.addEventListener('DOMContentLoaded', () => {
     cargarPerfil(1);
     const btnEliminar = document.getElementById('btnConfirmarEliminarCuenta');
@@ -9,8 +14,20 @@ document.addEventListener('DOMContentLoaded', () => {
         btnEliminar.addEventListener('click', eliminarCuenta);
     }
 });
-
+    /*
+        Evento que se ejecuta cuando el DOM ha sido completamente cargado.
+        Se utiliza para inicializar la carga del perfil del usuario y
+        configurar eventos en elementos interactivos.
+    */
 function cargarPerfil(page) {
+    /*
+        Función encargada de obtener los datos del perfil del usuario desde el servidor.
+        Realiza una petición HTTP al endpoint /api/perfil/ con paginación.
+        Si la respuesta es válida:
+                    - Se renderiza el perfil (solo en la primera página).
+                    - Se actualiza el historial de partidas.
+                    - Se genera la paginación correspondiente.
+    */
     paginaActual = page;
     fetch(`/api/perfil/?page=${page}`)
         .then(res => res.json())
@@ -30,6 +47,11 @@ function cargarPerfil(page) {
 }
 
 function renderizarPerfil(usuario, stats) {
+        /*
+        Inserta en el DOM la información del usuario y sus estadísticas.
+        Se actualizan campos como nombre, fecha de registro y métricas de juego.
+    */
+    
     document.getElementById('nombreUsuario').textContent = usuario.nombre_usuario;
     document.getElementById('fechaRegistro').textContent = usuario.fecha_registro || '—';
     document.getElementById('statVictorias').textContent = stats.total_victorias;
@@ -38,7 +60,7 @@ function renderizarPerfil(usuario, stats) {
     document.getElementById('statCategoria').textContent = stats.categoria_mas_jugada;
 
     aplicarAvatarEnPerfil(usuario.nombre_usuario, usuario.avatar);
-
+  
     const promedioSecs = Math.round(stats.promedio_tiempo);
     const mins = Math.floor(promedioSecs / 60);
     const secs = promedioSecs % 60;
@@ -47,6 +69,10 @@ function renderizarPerfil(usuario, stats) {
 }
 
 function aplicarAvatarEnPerfil(nombreUsuario, avatarParams) {
+   /*
+        Genera y renderiza dinámicamente el avatar del usuario utilizando la API Dicebear.
+        Si no existe avatar configurado, se muestra un ícono por defecto.
+    */    
     const avatarEl = document.getElementById('avatarPerfil');
     if (avatarParams) {
         const url = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${nombreUsuario}&${avatarParams}&rotate=0&scale=100&backgroundType=solid&radius=0&size=100`;
@@ -57,6 +83,10 @@ function aplicarAvatarEnPerfil(nombreUsuario, avatarParams) {
 }
 
 function abrirEditorAvatar() {
+        /*
+        Inicializa el editor de avatar permitiendo modificar la apariencia del usuario.
+        Utiliza un componente externo (avatarPicker).
+    */
     if (!_usuarioActual) return;
 
     avatarPicker.initEdicion(
@@ -71,6 +101,10 @@ function abrirEditorAvatar() {
 }
 
 function guardarAvatarEnServidor(state) {
+        /*
+        Envía al servidor los nuevos parámetros del avatar seleccionados por el usuario.
+        Actualiza la interfaz si la operación es exitosa.
+    */
     const nuevoAvatar = avatarPicker.buildParams();
 
     fetch('/api/actualizar_avatar/', {
@@ -101,6 +135,10 @@ function guardarAvatarEnServidor(state) {
 }
 
 function mostrarToastAvatar() {
+        /*
+        Muestra una notificación visual (toast) indicando que el avatar fue guardado.
+        Utiliza una implementación personalizada o Bootstrap como fallback.
+    */
     if (window.memoToasts && typeof window.memoToasts.mostrar === 'function') {
     window.memoToasts.mostrar('toastAvatarGuardado', 4000);
         return;
@@ -111,6 +149,10 @@ function mostrarToastAvatar() {
 }
 
 function renderizarHistorial(historial) {
+        /*
+        Genera dinámicamente las filas de la tabla de historial de partidas.
+        Incluye información como categoría, puntaje, tiempo y estado.
+    */
     const cuerpo = document.getElementById('cuerpoHistorial');
 
     if (historial.length === 0) {
@@ -157,6 +199,10 @@ function renderizarHistorial(historial) {
 }
 
 function renderizarPaginacion(paginacion) {
+      /*
+        Construye dinámicamente los controles de paginación del historial.
+        Permite navegar entre páginas de resultados.
+    */
     const { page, total_paginas, total_partidas, por_pagina } = paginacion;
 
     let contenedor = document.getElementById('paginacionHistorial');
@@ -234,6 +280,10 @@ function obtenerBadgeEstado(estado) {
 }
 
 function eliminarCuenta() {
+      /*
+        Realiza la solicitud al servidor para eliminar la cuenta del usuario.
+        Si la operación es exitosa, redirige al usuario a la página principal.
+    */
     fetch('/api/eliminar_cuenta/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
