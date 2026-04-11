@@ -18,6 +18,6 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('', include('juego.urls')),
-    path('api/', include('api.urls')),
+    path('', include('juego.urls')),  # Incluye la URL de la app juego
+    path('api/', include('api.urls')),  # Incluye la URL de la app API
 ]
