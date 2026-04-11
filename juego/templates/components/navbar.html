@@ -1,6 +1,11 @@
 {% load static %}
 
 <!-- ── Navbar ── -->
+ <!-- 
+    Este bloque define la barra de navegación principal del sistema MEMO.
+    Su función es proporcionar acceso rápido a las distintas secciones 
+    del juego, así como mostrar información del usuario autenticado.
+-->
 <nav class="memo-navbar">
     <div class="memo-nav-inner">
 
@@ -12,13 +17,18 @@
 
         <!-- Items derecha -->
         <div class="memo-nav-items">
-
+     <!-- 
+            Contenedor de los elementos de navegación ubicados en la parte derecha.
+            Incluye enlaces principales, acceso a instrucciones y menú de usuario.
+        -->
             <!-- Inicio -->
             <a href="/juego/" class="memo-nav-link" id="nav-inicio">
                 <i class="fas fa-house"></i>
                 <span>Inicio</span>
             </a>
-
+  <!-- 
+                Redirige al ranking de puntajes donde se visualizan los mejores resultados.
+            -->
             <!-- Scoreboard -->
             <a href="/scoreboard/" class="memo-nav-link" id="nav-scoreboard">
                 <i class="fas fa-ranking-star"></i>
@@ -26,6 +36,10 @@
             </a>
 
             <!-- Instrucciones -->
+                    <!-- 
+                Botón que activa un modal con las instrucciones del juego.
+                Utiliza atributos de Bootstrap para controlar la apertura del modal.
+            -->
             <a href="#" class="memo-nav-link" id="nav-instrucciones"
                data-bs-toggle="modal" data-bs-target="#modalInstrucciones">
                 <i class="fas fa-circle-question"></i>
@@ -33,6 +47,13 @@
             </a>
 
             <!-- Avatar dropdown -->
+             <!-- 
+                Sección que representa el perfil del usuario.
+                Permite mostrar su avatar y desplegar un menú con opciones adicionales
+                Si el usuario tiene avatar, se genera dinámicamente usando Dicebear API.
+                Se personaliza con el nombre del usuario y parámetros de estilo.
+                Si no exise avatar, se muestra un ícono genérico de usuario
+            -->
             <div class="memo-avatar-wrap" id="avatarWrap">
                 <button class="memo-avatar-btn" id="avatarBtn"
                         onclick="alternarDropdown()">
@@ -207,8 +228,16 @@
         </div>
     </div>
 </div>
-
+<!-- 
+    Variable global que almacena el identificador de la sesión del usuario.
+    Se utiliza para control y validación en scripts del lado del cliente.
+-->
 <script>
     const SESION_ID = "{{ request.session.sesion_id }}" || null;
 </script>
+
+<!-- 
+    Inclusión del archivo JavaScript que gestiona la lógica del navbar,
+    incluyendo dropdowns, menú móvil y cierre de sesión.
+-->
 <script src="{% static 'js/navbar.js' %}"></script>
