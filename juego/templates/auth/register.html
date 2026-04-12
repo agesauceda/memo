@@ -17,7 +17,7 @@
 
 <body class="auth-page">
 
-    <!-- Burbujas decorativas -->
+    <!-- ===== Elementos decorativos de fondo (burbujas) ===== -->
     <div class="auth-bubble b1" style="background: var(--mint);"></div>
     <div class="auth-bubble b2" style="background: var(--peach);"></div>
     <div class="auth-bubble b3" style="background: var(--sky);"></div>
@@ -26,7 +26,7 @@
 
         <div class="register-layout">
 
-            <!-- Columna izquierda: título + avatar -->
+            <!-- Selector de avatar (abre modal al hacer clic) -->
             <div class="register-left">
                 <div style="font-size: 2.2em; line-height: 1;">
                     <i class="fas fa-user-plus" style="color: var(--mint);"></i>
@@ -34,7 +34,7 @@
                 <h1 class="auth-title mt-1" style="color: var(--mint); font-size: 1.6em;">Crear cuenta</h1>
                 <p class="auth-subtitle" style="margin-bottom: 1.2rem;">¡Únete y empieza a jugar!</p>
 
-                <!-- Círculo de avatar -->
+                <!-- Imagen del avatar seleccionado -->
                 <div class="avatar-circle-wrap" onclick="abrirModalAvatar()" title="Elegir avatar">
                     <img id="avatarPreviewCircle" src="" alt="Avatar" class="avatar-circle-img" style="display:none;">
                     <div class="avatar-circle-placeholder" id="avatarPlaceholder">
@@ -49,11 +49,11 @@
                 </div>
             </div>
 
-            <!-- Columna derecha: campos -->
+            <!-- Columna derecha: formulario de registro -->
             <div class="register-right">
                 <form id="registerForm" novalidate>
 
-                    <!-- Nombre y Apellido -->
+                    <!-- Campos: Teléfono y Correo electrónico -->
                     <div class="row g-2 mb-2">
                         <div class="col-6">
                             <label class="auth-label" for="firstName">
@@ -87,7 +87,7 @@
                         </div>
                     </div>
 
-                    <!-- Usuario -->
+                    <!--  Campo: Nombre de usuario -->
                     <div class="mb-2">
                         <label class="auth-label" for="username">
                             <i class="fas fa-user me-1"></i> Nombre de usuario
@@ -96,7 +96,7 @@
                         <div class="auth-feedback" id="err-username"></div>
                     </div>
 
-                    <!-- Contraseñas -->
+                    <!-- Input con botón para mostrar/ocultar -->
                     <div class="row g-2 mb-3">
                         <div class="col-6">
                             <label class="auth-label" for="password">

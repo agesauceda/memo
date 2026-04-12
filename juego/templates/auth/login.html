@@ -18,14 +18,14 @@
 
 <body class="auth-page">
 
-    <!-- Burbujas decorativas -->
+    <!-- Estilo de Burbujas decorativas -->
     <div class="auth-bubble b1"></div>
     <div class="auth-bubble b2"></div>
     <div class="auth-bubble b3"></div>
 
     <div class="auth-card">
 
-        <!-- Logo / título -->
+        <!-- Logo de la pagina/ título -->
         <div class="text-center mb-4">
             <div style="font-size: 3em; line-height: 1;">
                 <i class="fas fa-brain" style="color: var(--sky);"></i>
@@ -36,7 +36,7 @@
             </p>
         </div>
 
-        <!-- Formulario -->
+        <!-- Formulario de ingreso -->
         <form id="loginForm" novalidate>
 
             <!-- Usuario -->
@@ -53,7 +53,7 @@
                 <div class="auth-feedback" id="err-username"></div>
             </div>
 
-            <!-- Contraseña -->
+            <!-- Contraseña de usuario -->
             <div class="mb-4">
                 <label class="auth-label" for="password">
                     <i class="fas fa-key me-1"></i> Contraseña
@@ -81,7 +81,7 @@
 
         <hr class="auth-divider">
 
-        <!-- Links -->
+        <!-- Link de autenticacion -->
         <div class="auth-links">
             <a href="/registro/">
                 <i class="fas fa-user-plus me-1"></i> Crear cuenta
@@ -95,7 +95,7 @@
     </div><!-- /auth-card -->
 
 
-    <!-- ── Modal: Recuperar contraseña ── -->
+    <!-- ── Modal: Recuperar contraseña de usuario por correo ── -->
     <div class="modal fade" id="recoverModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom p-4 border-0">
@@ -141,7 +141,7 @@
         </div>
     </div>
 
-    <!-- ── Modal: Verificación OTP — Recuperación ── -->
+    <!-- ── Modal: Verificación de codigo de recuperacion OTP — Recuperación ── -->
     <div class="modal fade" id="resetOtpModal" tabindex="-1" aria-hidden="true"
          data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">

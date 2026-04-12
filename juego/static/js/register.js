@@ -1,6 +1,8 @@
+// Función para mostrar u ocultar la contraseña
 function mostrarOcultarContrasena(inputId, btn) {
     const input = document.getElementById(inputId);
     const icono = btn.querySelector('i');
+    // Cambia entre mostrar y ocultar contraseña
     if (input.type === 'password') {
         input.type = 'text';
         icono.className = 'fas fa-eye-slash';
@@ -9,7 +11,7 @@ function mostrarOcultarContrasena(inputId, btn) {
         icono.className = 'fas fa-eye';
     }
 }
-
+// Se ejecuta cuando el DOM está completamente cargado
 document.addEventListener('DOMContentLoaded', function () {
     avatarPicker.initRegistro(
         /* getSeed */     () => document.getElementById('username').value.trim() || 'memo',
@@ -17,24 +19,27 @@ document.addEventListener('DOMContentLoaded', function () {
         /* onAbandonar */ (state) => actualizarCirculoRegistro()
     );
 
+     // Manejo de inputs OTP (avanzar y retroceder automáticamente)
     ['otp1','otp2','otp3','otp4'].forEach((id, i, arr) => {
         const el = document.getElementById(id);
         if (!el) return;
+        // Avanza al siguiente campo cuando se escribe
         el.addEventListener('input', function () {
             if (this.value && i < arr.length - 1)
                 document.getElementById(arr[i + 1]).focus();
         });
+        // Retrocede con backspace si está vacío
         el.addEventListener('keydown', function (e) {
             if (e.key === 'Backspace' && !this.value && i > 0)
                 document.getElementById(arr[i - 1]).focus();
         });
     });
 });
-
+// Abre el modal para seleccionar avatar
 function abrirModalAvatar() {
     avatarPicker.abrir();
 }
-
+// Actualiza la vista previa del avatar en el registro
 function actualizarCirculoRegistro() {
     const seed = document.getElementById('username').value.trim() || 'memo';
     const url = avatarPicker.buildUrl(seed, 90);
@@ -44,7 +49,7 @@ function actualizarCirculoRegistro() {
     img.style.display = 'block';
     placeholder.style.display = 'none';
 }
-
+// Evento submit del formulario de registro
 document.getElementById('registerForm').addEventListener('submit', function (e) {
     e.preventDefault();
     let valido = true;
@@ -61,6 +66,7 @@ document.getElementById('registerForm').addEventListener('submit', function (e) 
 
     const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+     // Limpia errores previos
     Object.keys(campos).forEach(id => {
         const el = document.getElementById(id);
         const err = document.getElementById(campos[id].errId);
@@ -78,6 +84,7 @@ document.getElementById('registerForm').addEventListener('submit', function (e) 
         if (reglas.email) {
             if (!val) { fallo = true; msg = reglas.msgVacio; }
             else if (!emailRx.test(val)) { fallo = true; msg = reglas.msgCorto; }
+            // Validación de coincidencia de contraseñas
         } else if (reglas.match) {
             if (!val) { fallo = true; msg = reglas.msgVacio; }
             else if (val !== document.getElementById(reglas.match).value.trim()) { fallo = true; msg = reglas.msgCorto; }
@@ -94,7 +101,7 @@ document.getElementById('registerForm').addEventListener('submit', function (e) 
             valido = false;
         }
     });
-
+ // Si todo es válido
     if (valido) {
         if (!avatarPicker.state.saved) {
             avatarPicker.randomizeState();
@@ -105,7 +112,7 @@ document.getElementById('registerForm').addEventListener('submit', function (e) 
 
 let _otpFormData = null;
 let _otpUsuarioId = null;
-
+// Envía datos para registrar usuario y generar OTP
 function registrarUsuario() {
     const seed = document.getElementById('username').value.trim();
     const avatar = avatarPicker.buildParams();
@@ -120,7 +127,7 @@ function registrarUsuario() {
     formData.append('avatar', avatar);
 
     _otpFormData = formData;
-
+ // Petición al backend para enviar OTP
     fetch('/api/enviar_otp_registro/', {
         method: 'POST',
         body: formData
@@ -129,12 +136,14 @@ function registrarUsuario() {
     .then(data => {
         if (data.status) {
             _otpUsuarioId = data.usuario_id;
+             // Muestra correo en modal
             document.getElementById('otpEmailDisplay').textContent =
                 document.getElementById('email').value.trim();
             ['otp1','otp2','otp3','otp4'].forEach(id => document.getElementById(id).value = '');
             document.getElementById('err-otp').style.display = 'none';
             new bootstrap.Modal(document.getElementById('otpModal')).show();
         } else {
+            // Manejo de errores
             if (data.errores) {
                 Object.entries(data.errores).forEach(([campo, msg]) => mostrarErrorRegistro(msg, campo));
             } else {
@@ -144,7 +153,7 @@ function registrarUsuario() {
     })
     .catch(err => console.error('Error en registro:', err));
 }
-
+// Muestra errores en campos específicos del formulario
 function mostrarErrorRegistro(mensaje, campo) {
     const mapa = {
         nombre: { inputId: 'firstName', errId: 'err-firstName' },
@@ -160,13 +169,14 @@ function mostrarErrorRegistro(mensaje, campo) {
         err.textContent = mensaje;
         err.classList.add('show');
     } else {
+         // Error general
         const errEl = document.getElementById('err-username');
         document.getElementById('username').classList.add('is-invalid');
         errEl.textContent = mensaje;
         errEl.classList.add('show');
     }
 }
-
+// Verifica el código OTP ingresado
 function verifyOtp() {
     const codigo = ['otp1','otp2','otp3','otp4']
         .map(id => document.getElementById(id).value.trim())
@@ -206,7 +216,7 @@ function verifyOtp() {
 
 function resendOtp() {
     if (!_otpFormData) return;
-
+  // Petición para verificar OTP
     fetch('/api/enviar_otp_registro/', {
         method: 'POST',
         body: _otpFormData
@@ -215,6 +225,7 @@ function resendOtp() {
     .then(data => {
         if (data.status) {
             _otpUsuarioId = data.usuario_id;
+            // Limpia inputs
             ['otp1','otp2','otp3','otp4'].forEach(id => document.getElementById(id).value = '');
             document.getElementById('err-otp').textContent = 'Código reenviado.';
             document.getElementById('err-otp').style.display = 'block';
