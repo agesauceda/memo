@@ -37,33 +37,34 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'juego',
-    'api',
+    'juego',                     # App de juego personalizada
+    'api',                       # App de API personalizada
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'memo.middleware.CerrarSesionInactivaMiddleware',
+    'django.middleware.security.SecurityMiddleware', # Middleware de seguridad
+    'django.contrib.sessions.middleware.SessionMiddleware', # Middleware de sesiones
+    'django.middleware.common.CommonMiddleware', 
+    'django.middleware.csrf.CsrfViewMiddleware', # Middleware de protección CSRF
+    'django.contrib.auth.middleware.AuthenticationMiddleware', # Middleware de autenticación
+    'django.contrib.messages.middleware.MessageMiddleware', # Middleware de mensajes
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', # Middleware de protección clickjacking
+    'memo.middleware.CerrarSesionInactivaMiddleware', # Middleware personalizado para cerrar sesiones inactivas
 ]
 
-ROOT_URLCONF = 'memo.urls'
+ROOT_URLCONF = 'memo.urls'  # Configuración de URLs
+
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'BACKEND': 'django.template.backends.django.DjangoTemplates', # Motor de plantillas de Django
+        'DIRS': [], # Directorios de plantillas
+        'APP_DIRS': True, # Buscar plantillas en las apps
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request', # Procesador de contexto para request
+                'django.contrib.auth.context_processors.auth', # Procesador de contexto para autenticación
+                'django.contrib.messages.context_processors.messages', # Procesador de contexto para mensajes
             ],
         },
     },
@@ -78,12 +79,12 @@ WSGI_APPLICATION = 'memo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME', 'memo_db'),
-        'USER': os.environ.get('DB_USER', 'root'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
+        'ENGINE': 'django.db.backends.mysql', # base de datos MySQL
+        'NAME': os.environ.get('DB_NAME', 'memo_db'), # Nombre de la base de datos
+        'USER': os.environ.get('DB_USER', 'root'), # Usuario de la base de datos
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''), # Contraseña de la base de datos
+        'HOST': os.environ.get('DB_HOST', 'localhost'), # Host de la base de datos
+        'PORT': os.environ.get('DB_PORT', '3306'), # Puerto de la base de datos
     }
 }
 
@@ -93,16 +94,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', # Valida similitud con atributos del usuario
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', # Valida longitud mínima
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', # Valida contraseñas comunes
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', # Valida contraseñas numéricas
     },
 ]
 
@@ -114,30 +115,34 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_I18N = True  # Usar internacionalización
 
-USE_TZ = True
+USE_TZ = True  # Usar zonas horarias
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'static/'  # URL para archivos estáticos
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST          = 'smtp.gmail.com'
-EMAIL_PORT          = 587
-EMAIL_USE_TLS       = True
-EMAIL_HOST_USER     = 'appmemonoreply@gmail.com'
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL  = 'Memo App <appmemonoreply@gmail.com>'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'  # Tipo de campo para primary keys
 
 
-SESSION_COOKIE_AGE = 900         
-SESSION_SAVE_EVERY_REQUEST = True
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# Configuración de email
+EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'  # Backend de email SMTP
+EMAIL_HOST          = 'smtp.gmail.com'  # Servidor SMTP
+EMAIL_PORT          = 587  # Puerto SMTP
+EMAIL_USE_TLS       = True  # Usar TLS
+EMAIL_HOST_USER     = 'appmemonoreply@gmail.com'  # Usuario de email
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')  # Contraseña de email
+DEFAULT_FROM_EMAIL  = 'Memo App <appmemonoreply@gmail.com>'  # Email por defecto
+
+
+# Configuración de sesiones
+SESSION_COOKIE_AGE = 900          # Tiempo de vida de la cookie de sesión en segundos (15 minutos)
+SESSION_SAVE_EVERY_REQUEST = True # Guardar sesión en cada request
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Expirar sesión al cerrar el navegador
