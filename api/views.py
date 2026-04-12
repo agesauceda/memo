@@ -12,8 +12,20 @@ from juego.models import Usuario, CategoriaJuego, Carta, Partida, EstadisticaJug
 from decimal import Decimal
 
 #  LOGIN
+
+# La función `login` maneja la autenticación de usuarios verificando el nombre de usuario y la
+# contraseña proporcionados, configurando variables de sesión y creando una nueva entrada de sesión en la base de datos.
+#
+# :param request: La función `login` que proporcionaste es una función de vista en Django que maneja la
+# autenticación de usuarios. Toma un objeto `request` como parámetro, que contiene información sobre la
+# solicitud HTTP actual
+# :return: La función `login` devuelve una respuesta JSON con diferentes datos dependiendo de las
+# condiciones cumplidas durante el proceso de inicio de sesión. Aquí hay un desglose de los posibles
+# escenarios de retorno:
+
 @csrf_exempt
 def login(request):
+  
     if request.method != 'POST':
         return JsonResponse({"status": False, "msg": "Método no permitido"})
 
@@ -57,6 +69,16 @@ def login(request):
     return JsonResponse({"status": True, "msg": "Acceso correcto", "redirect_url": "/juego/"})
 
 #  REGISTRO
+
+# La función `registro` maneja el registro de usuarios validando los datos de entrada, verificando
+# duplicados, creando una nueva instancia de usuario y devolviendo respuestas JSON apropiadas.
+#
+# :param request: El código que proporcionaste es una función de vista de Django para el registro de usuarios.
+# Maneja una solicitud POST que contiene datos de registro de usuario, valida los campos de entrada, verifica
+# entradas duplicadas en la base de datos, crea un nuevo registro de usuario si todas las verificaciones pasan,
+# y devuelve una respuesta JSON con el estado del registro
+# :return: La función `registro` devuelve respuestas JSON basadas en diferentes condiciones:
+
 @csrf_exempt
 def registro(request):
     if request.method != 'POST':
@@ -111,6 +133,18 @@ def registro(request):
         return JsonResponse({"status": False, "msg": f"Error en el registro: {str(e)}"})
 
 #  LOGOUT
+
+# Esta función de Python maneja el cierre de sesión de un usuario actualizando la información de la sesión
+# y devolviendo una respuesta JSON.
+#
+# :param request: El parámetro `request` en la función `logout` es un objeto HttpRequest que Django pasa
+# a la función de vista cuando se llama. Contiene información sobre la solicitud actual, incluyendo metadatos
+# como el método de solicitud, datos de sesión y parámetros POST
+# :return: Se está devolviendo una respuesta JSON con las siguientes claves y valores:
+# - "status": True
+# - "msg": "Sesión cerrada"
+# - "redirect_url": "/"
+
 @csrf_exempt
 def logout(request):
     if request.method != 'POST':
@@ -132,6 +166,17 @@ def logout(request):
     return JsonResponse({"status": True, "msg": "Sesión cerrada", "redirect_url": "/"})
 
 #  OBTENER NIVELES
+
+# La función `obtener_categorias` recupera categorías de juegos con atributos específicos de la
+# base de datos y las devuelve como una respuesta JSON, manejando excepciones si ocurren.
+#
+# :param request: La función `obtener_categorias` verifica si una sesión de usuario está activa
+# verificando si la clave 'usuario_id' está presente en el objeto `request.session`. Si la sesión de
+# usuario no está activa, devuelve una respuesta JSON indicando que la sesión no está iniciada
+# :return: La función `obtener_categorias` está devolviendo una respuesta JSON. Si 'usuario_id' no
+# se encuentra en la sesión de la solicitud, devuelve una respuesta JSON con un estado de False y
+# un mensaje indicando que la sesión no está iniciada
+
 def obtener_categorias(request):
     if 'usuario_id' not in request.session:
         return JsonResponse({"status": False, "msg": "Sesión no iniciada"})
@@ -144,6 +189,19 @@ def obtener_categorias(request):
         return JsonResponse({"status": False, "msg": str(e)})
 
 #  OBTENER CARTAS
+
+# Esta función recupera tarjetas activas que pertenecen a una categoría específica para la sesión
+# de un usuario, manejando excepciones según sea necesario.
+#
+# :param request: El parámetro `request` se utiliza típicamente en las vistas de Django para representar
+# una solicitud HTTP. Contiene información sobre la solicitud actual, como el usuario que realiza la
+# solicitud, cualquier dato enviado con la solicitud y otros metadatos. En este contexto, el parámetro
+# `request` se utiliza para verificar si
+# :param categoria_id: El parámetro `categoria_id` se utiliza para identificar la categoría de tarjetas
+# que deseas recuperar. Se utiliza para filtrar las tarjetas según su categoría en la base de datos
+# :return: Se devuelve un JsonResponse con un estado de éxito y una lista de tarjetas en la categoría
+# especificada, o un estado de fallo con un mensaje de error.
+
 def obtener_cartas(request, categoria_id):
     if 'usuario_id' not in request.session:
         return JsonResponse({"status": False, "msg": "Sesión no iniciada"})
@@ -162,6 +220,16 @@ def obtener_cartas(request, categoria_id):
         return JsonResponse({"status": False, "msg": str(e)})
 
 #  GUARDAR PARTIDA
+
+# La función `guardar_partida` guarda una sesión de juego con detalles relevantes y actualiza
+# las estadísticas del jugador en consecuencia.
+#
+# :param request: El código que proporcionaste es una función de vista de Django que maneja el guardado
+# de una sesión de juego. Déjame explicar el proceso paso a paso:
+# :return: El código devuelve una respuesta JSON con un estado y un mensaje. El estado indica si la
+# operación fue exitosa o no, y el mensaje proporciona información adicional sobre el resultado de la
+# operación.
+
 @csrf_exempt
 def guardar_partida(request):
     if 'usuario_id' not in request.session:
@@ -252,6 +320,19 @@ def guardar_partida(request):
         return JsonResponse({"status": False, "msg": str(e)})
 
 #  SCOREBOARD
+
+# La función `scoreboard` recupera y procesa datos de juego para generar un marcador con
+# clasificaciones de usuarios basadas en sus puntajes.
+#
+# :param request: La función `scoreboard` que proporcionaste es una vista de Django que devuelve una
+# respuesta JSON que contiene los datos del marcador de los 20 mejores jugadores en función de sus
+# puntajes en el juego
+# :return: La función `scoreboard(request)` está devolviendo una respuesta JSON. Si se cumplen las
+# condiciones (existe sesión de usuario y el método de solicitud es GET), consultará la base de datos
+# para ciertos datos relacionados con juegos y usuarios, calculará clasificaciones basadas en puntajes y
+# devolverá una respuesta JSON que contiene los datos de estado y marcador. Si ocurre una excepción
+# durante este proceso, devolverá una respuesta JSON con el estado establecido en False
+
 def scoreboard(request):
     if 'usuario_id' not in request.session:
         return JsonResponse({"status": False, "msg": "Sesión no iniciada"})
@@ -292,6 +373,20 @@ def scoreboard(request):
         return JsonResponse({"status": False, "msg": str(e)})
 
 #  PERFIL
+
+# La función `perfil` recupera y muestra la información de perfil de un usuario, estadísticas e
+# historial de juegos con soporte de paginación.
+#
+# :param request: El fragmento de código dado es una función de vista de Django en Python que recupera
+# y devuelve la información de perfil de un usuario, estadísticas e historial de juegos en una respuesta
+# JSON. Verifica si el usuario está conectado, valida el método de solicitud, obtiene el usuario y sus
+# estadísticas de la base de datos, pagina el usuario
+# :return: La función `perfil` devuelve una respuesta JSON que contiene información sobre el perfil de
+# un usuario, incluyendo sus estadísticas, historial de juegos y detalles de paginación. La respuesta
+# incluye los detalles del usuario, número total de juegos jugados, victorias, derrotas, juegos
+# abandonados, puntaje acumulado, tiempo promedio jugado, categoría más jugada, historial de juegos
+# con detalles como nombre de categoría, estado del juego, puntaje, tiempo jugado y fecha de
+
 def perfil(request):
     if 'usuario_id' not in request.session:
         return JsonResponse({"status": False, "msg": "Sesión no iniciada"})
@@ -356,6 +451,22 @@ def perfil(request):
     })
 
 #  HELPER - OTP
+
+# El código define funciones para generar y enviar códigos OTP para la verificación de usuarios y
+# recuperación de contraseña, así como para validar los códigos OTP dentro de un período de tiempo
+# especificado.
+#
+# :param usuario: El parámetro `usuario` en la función `_generar_y_enviar_otp` se refiere al usuario
+# para el cual se está generando y enviando la contraseña de un solo uso (OTP). Probablemente contiene
+# información sobre el usuario, como su nombre, dirección de correo electrónico y posiblemente otros
+# detalles como su ID o
+# :param tipo: El parámetro `tipo` en la función `_generar_y_enviar_otp` se utiliza para determinar el
+# propósito de la generación de OTP y el envío de correo electrónico. Puede tener dos valores posibles:
+# :return: La función `_generar_y_enviar_otp` devuelve el código OTP generado como una cadena. La
+# función `_validar_otp` devuelve una tupla donde el primer elemento es un booleano que indica si el
+# código OTP es válido y el segundo elemento es el objeto OTP si es válido o un mensaje de cadena
+# indicando que el código es incorrecto o ha expirado.
+
 def _generar_y_enviar_otp(usuario, tipo):
     codigo = str(random.randint(1000, 9999))
     CodigoOTP.objects.create(usuario=usuario, codigo=codigo, tipo=tipo)
@@ -395,6 +506,15 @@ def _validar_otp(usuario_id, codigo, tipo):
         return False, "Código incorrecto o expirado"
 
 #  ENVIAR OTP REGISTRO
+
+# La función "enviar_otp_registro" maneja el proceso de registro validando los datos de entrada,
+# verificando duplicados, creando un nuevo usuario con verificación OTP y enviando el código OTP.
+#
+# :param request: El código que proporcionaste es una función de vista de Django que maneja el
+# proceso de registro de un usuario. Déjame explicar los puntos clave de este código:
+# :return: La función `enviar_otp_registro` está devolviendo respuestas JSON basadas en diferentes
+# condiciones:
+
 @csrf_exempt
 def enviar_otp_registro(request):
     if request.method != 'POST':
@@ -454,6 +574,16 @@ def enviar_otp_registro(request):
         return JsonResponse({"status": False, "msg": f"Error al crear usuario: {str(e)}"})
 
 #  VERIFICAR OTP REGISTRO
+
+# Esta función de Python verifica una contraseña de un solo uso (OTP) para un usuario y activa su
+# cuenta si la OTP es válida.
+#
+# :param request: La función `verificar_otp` está diseñada para manejar una solicitud POST que
+# verifica una contraseña de un solo uso (OTP) para un usuario. Aquí hay un desglose de la función:
+# :return: La función `verificar_otp` está devolviendo una respuesta JSON basada en las condiciones
+# cumplidas durante el proceso de verificación de OTP. Aquí hay un resumen de los posibles escenarios
+# de retorno:
+
 @csrf_exempt
 def verificar_otp(request):
     if request.method != 'POST':
@@ -480,6 +610,18 @@ def verificar_otp(request):
         return JsonResponse({"status": False, "msg": "Usuario no encontrado"})
 
 #  RECUPERAR CONTRASEÑA - OTP
+
+# Esta función de Python se utiliza para manejar una solicitud de recuperación de contraseña enviando
+# una contraseña de un solo uso (OTP) al correo electrónico del usuario si el correo electrónico
+# proporcionado está asociado con una cuenta de usuario activa.
+#
+# :param request: El fragmento de código que proporcionaste es una función de Python para manejar una
+# solicitud de recuperación de contraseña. Verifica si el método de solicitud es POST, recupera la
+# dirección de correo electrónico de los datos de la solicitud e intenta encontrar un usuario con la
+# dirección de correo electrónico proporcionada en la base de datos. Si el usuario se encuentra y está activo,
+# :return: La función `recuperar_contrasena` está devolviendo una respuesta JSON basada en las condiciones
+# cumplidas durante la ejecución de la función. Aquí hay las posibles respuestas JSON que se pueden devolver:
+
 @csrf_exempt
 def recuperar_contrasena(request):
     if request.method != 'POST':
@@ -501,6 +643,19 @@ def recuperar_contrasena(request):
         return JsonResponse({"status": False, "msg": f"Error al enviar el correo: {str(e)}"})
 
 #  VERIFICAR OTP RECUPERACIÓN + nueva contraseña
+
+# La función `verificar_otp_recuperacion` verifica una contraseña de un solo uso (OTP) para la
+# recuperación de contraseña y actualiza la contraseña del usuario si la verificación es exitosa.
+#
+# :param request: El código que proporcionaste es una función de vista en Django que maneja una
+# solicitud POST para verificar una contraseña de un solo uso (OTP) para la recuperación de contraseña.
+# Déjame explicar los parámetros utilizados en esta función:
+# :return: El código está devolviendo una respuesta JSON con un estado y un mensaje basado en las
+# condiciones cumplidas durante la verificación de una contraseña de un solo uso (OTP) para la
+# recuperación de contraseña. Si el método no es POST, devuelve un mensaje indicando que el método no
+# está permitido. Si hay datos faltantes en la solicitud, devuelve un mensaje indicando que faltan datos.
+# Si la validación de OTP falla, devuelve un mensaje
+
 @csrf_exempt
 def verificar_otp_recuperacion(request):
     if request.method != 'POST':
@@ -528,6 +683,19 @@ def verificar_otp_recuperacion(request):
         return JsonResponse({"status": False, "msg": "Usuario no encontrado"})
     
 #  ACTUALIZAR AVATAR
+
+# Esta función de Python actualiza el avatar de un usuario en una aplicación web si el usuario está
+# conectado y realiza una solicitud POST con un valor de avatar no vacío.
+#
+# :param request: El parámetro `request` en la función `actualizar_avatar` es un objeto que contiene
+# información sobre la solicitud HTTP actual. Incluye detalles como el método de solicitud (GET, POST, etc.),
+# datos de sesión y cualquier dato enviado en el cuerpo de la solicitud (en el caso de una solicitud POST)
+# :return: El código está devolviendo una respuesta JSON con un estado y un mensaje basado en diferentes
+# condiciones:
+# - Si 'usuario_id' no está en la sesión, devuelve {"status": False, "msg": "Sesión no iniciada"}.
+# - Si el método de solicitud no es POST, devuelve {"status": False, "msg": "Método no permitido"}.
+# - Si
+
 @csrf_exempt
 def actualizar_avatar(request):
     if 'usuario_id' not in request.session:
@@ -549,6 +717,15 @@ def actualizar_avatar(request):
         return JsonResponse({"status": False, "msg": "Usuario no encontrado"})
 
 #  ELIMINAR CUENTA (DESACTIVAR)
+
+# Esta función de Python está diseñada para desactivar una cuenta de usuario, actualizar la información
+# de sesión y devolver una respuesta JSON con el estado y un mensaje.
+#
+# :param request: El código que proporcionaste es una función de vista de Django que maneja el proceso
+# de eliminación de una cuenta de usuario. Déjame explicar los puntos clave del código:
+# :return: La función `eliminar_cuenta` está devolviendo una respuesta JSON con un estado que indica
+# si la eliminación de la cuenta fue exitosa o no, junto con un mensaje y una URL de redirección.
+
 @csrf_exempt
 def eliminar_cuenta(request):
     if 'usuario_id' not in request.session:
