@@ -1,20 +1,28 @@
+// Función para mostrar u ocultar la contraseña
 function mostrarOcultarContrasena(inputId, btn){
     const input = document.getElementById(inputId);
     const icono = btn.querySelector('i');
+    // Si el tipo actual es 'password', lo cambia a texto visible
     if (input.type === 'password'){
         input.type = 'text';
         icono.className = 'fas fa-eye-slash';
     } else {
-        input.type = 'password';
-        icono.className = 'fas fa-eye';
+        input.type = 'password'; // Oculta la contraseña nuevamente
+        icono.className = 'fas fa-eye'; // Cambia el icono a "mostrar"
     }
 }
 
+// Evento que se ejecuta al enviar el formulario de login
 document.getElementById('loginForm').addEventListener('submit', function (e){
     e.preventDefault();
-    let valido = true;
+    let valido = true; // Bandera para validar el formulario
+
+
+       // Obtiene los campos de usuario y contraseña
     const usuario = document.getElementById('username');
     const contrasena = document.getElementById('password');
+
+     // Limpia errores previos en ambos campos
 
     [usuario, contrasena].forEach(el => {
         el.classList.remove('is-invalid');
@@ -23,6 +31,7 @@ document.getElementById('loginForm').addEventListener('submit', function (e){
         errEl.textContent = '';
     });
 
+    // Valida si el usuario está vacío
     if (!usuario.value.trim()) {
         usuario.classList.add('is-invalid');
         const errU = document.getElementById('err-username');
@@ -39,6 +48,7 @@ document.getElementById('loginForm').addEventListener('submit', function (e){
         valido = false;
     }
  
+    // Función que envía los datos al servidor para iniciar sesión
     if (valido) iniciarSesion(usuario.value.trim(), contrasena.value.trim());
 });
 
@@ -67,6 +77,8 @@ function iniciarSesion(nombreUsuario, contrasena){
     .catch(err => console.error('Error en login:', err));
 }
 
+
+// Función para mostrar errores de login
 function mostrarErrorLogin(errores) {
     const usuarioInput = document.getElementById('username');
     const contrasenaInput = document.getElementById('password');
@@ -80,6 +92,7 @@ function mostrarErrorLogin(errores) {
     errContrasena.textContent = '';
     errContrasena.classList.remove('show');
 
+     // Error relacionado al usuario
     if (errores.usuario) {
         usuarioInput.classList.add('is-invalid');
         contrasenaInput.classList.add('is-invalid');
@@ -91,6 +104,7 @@ function mostrarErrorLogin(errores) {
         if (contrasenaInput.value.trim()) contrasenaInput.value = '';
     }
 
+     // Error específico de contraseña
     if (errores.contrasena) {
         contrasenaInput.classList.add('is-invalid');
         errContrasena.textContent = errores.contrasena;
@@ -101,14 +115,17 @@ function mostrarErrorLogin(errores) {
 
 let _resetUsuarioId = null;
 
+// Función para enviar solicitud de recuperación de contraseña
 function enviarRecuperacion() {
     const email = document.getElementById('recoverEmail');
     const errEl = document.getElementById('err-recover');
     const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    // Limpia errores previos
     email.classList.remove('is-invalid');
     errEl.classList.remove('show');
 
+    // Valida formato de email
     if (!emailRx.test(email.value.trim())) {
         email.classList.add('is-invalid');
         errEl.classList.add('show');
@@ -118,6 +135,7 @@ function enviarRecuperacion() {
     const formData = new FormData();
     formData.append('correo', email.value.trim());
 
+     // Envía petición al servidor
     fetch('/api/recuperar_contrasena/', {
         method: 'POST',
         body: formData
@@ -147,6 +165,7 @@ function enviarRecuperacion() {
     .catch(err => console.error('Error en recuperación:', err));
 }
 
+// Evento que se ejecuta cuando el DOM está listo
 document.addEventListener('DOMContentLoaded', function () {
     ['resetOtp1','resetOtp2','resetOtp3','resetOtp4'].forEach((id, i, arr) => {
         const el = document.getElementById(id);
@@ -161,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
+// Función para verificar el código OTP y cambiar contraseña
 function verificarOtpReset() {
     const codigo = ['resetOtp1','resetOtp2','resetOtp3','resetOtp4']
         .map(id => document.getElementById(id).value.trim())
@@ -185,6 +204,7 @@ function verificarOtpReset() {
     formData.append('codigo', codigo);
     formData.append('nueva_contrasena', nuevaContrasena);
 
+    // Envía datos al servidor para verificar OTP
     fetch('/api/verificar_otp_recuperacion/', {
         method: 'POST',
         body: formData
@@ -198,7 +218,7 @@ function verificarOtpReset() {
             } catch (e) {
                 console.warn('No se pudo guardar el estado de restablecer:', e);
             }
-            window.location.href = data.redirect_url;
+            window.location.href = data.redirect_url; // Redirige
         } else {
             errEl.textContent = data.msg;
             errEl.style.display = 'block';
