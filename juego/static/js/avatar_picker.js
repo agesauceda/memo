@@ -1,5 +1,29 @@
+/**
+ * Módulo de gestión de selección y generación de avatares.
+ * 
+ * Funcionalidades:
+ * - Selección de color, ojos y boca
+ * - Generación de preview en tiempo real
+ * - Flujo por pasos (con asistente)
+ * - Manejo de modos: registro y edición
+ * - Generación de URL para API externa (DiceBear)
+ * 
+ * Dependencias:
+ * - Bootstrap (modales)
+ * - DOM (elementos HTML específicos)
+ * - API externa DiceBear
+ */
+
+/**
+ * URL base de la API DiceBear para generación de avatares tipo "fun-emoji"
+ */
 const AVATAR_BASE_URL = 'https://api.dicebear.com/9.x/fun-emoji/svg';
 
+/**
+ * Lista de colores disponibles para el fondo del avatar
+ * - hex: valor hexadecimal
+ * - name: nombre descriptivo
+ */
 const AVATAR_COLORS = [
     { hex: 'FFA07A', name: 'Peach'       },
     { hex: 'F28B82', name: 'Coral'       },
@@ -23,25 +47,42 @@ const AVATAR_COLORS = [
     { hex: 'D4A017', name: 'Mostaza'     },
 ];
 
+/**
+ * Opciones disponibles de ojos
+ */
+
 const AVATAR_EYES = [
     'closed', 'closed2', 'crying', 'cute', 'glasses',
     'love', 'pissed', 'plain', 'sad', 'shades',
     'sleepClose', 'stars', 'tearDrop', 'wink', 'wink2'
 ];
 
+/**
+ * Opciones disponibles de bocas
+ */
 const AVATAR_MOUTHS = [
     'cute', 'drip', 'faceMask', 'kissHeart', 'lilSmile',
     'pissed', 'plain', 'sad', 'shout', 'shy',
     'sick', 'smileLol', 'smileTeeth', 'tongueOut', 'wideSmile'
 ];
 
+/**
+ * etiquetas de los pasos del wizard
+ */
 const STEP_LABELS = [
     'Paso 1 - Elige el color de fondo',
     'Paso 2 - Elige los ojos',
     'Paso 3 - Elige la boca',
 ];
 
+/**
+ * Objeto principal que maneja el estado y comportamiento del avatar picker
+ */
 const avatarPicker = {
+
+    /**
+ * Estado actual del avatar
+ */
 
     state: {
         bgColor: 'FFA07A',
@@ -50,7 +91,17 @@ const avatarPicker = {
         saved: false,
     },
 
+    /**
+ * Modo actual:
+ * - 'registro' → creación de usuario
+ * - 'edicion' → modificación de avatar existente
+ */
     modo: 'registro',
+
+    /**
+ * Función que retorna el seed del avatar
+ * (usado por DiceBear para generar variaciones)
+ */
 
     getSeed: function () { return 'memo'; },
 
@@ -66,6 +117,7 @@ const avatarPicker = {
      * @param {Function} onConfirmar Callback cuando guarda el avatar
      * @param {Function} onAbandonar Callback cuando sale sin guardar
      */
+
 
     initRegistro: function (getSeedFn, onConfirmar, onAbandonar) {
         this.modo = 'registro';
@@ -109,6 +161,9 @@ const avatarPicker = {
         if (btnAbandono) btnAbandono.innerHTML = '<i class="fas fa-right-from-bracket me-1"></i> Salir';
     },
 
+    /**
+ * Abre el modal del avatar y resetea el flujo
+ */
     abrir: function () {
         this._paso = 1;
         document.getElementById('avatarStep1').style.display = 'block';
@@ -121,6 +176,9 @@ const avatarPicker = {
         new bootstrap.Modal(document.getElementById('modalAvatar')).show();
     },
 
+    /**
+ * Cierra modal principal y abre confirmación de abandono
+ */
     confirmarAbandonar: function () {
         bootstrap.Modal.getInstance(document.getElementById('modalAvatar')).hide();
         document.getElementById('modalAvatar').addEventListener('hidden.bs.modal', function handler() {
@@ -129,6 +187,9 @@ const avatarPicker = {
         });
     },
 
+    /**
+ * Regresa al flujo después de cancelar abandono
+ */
     volverDesdeAbandono: function () {
         bootstrap.Modal.getInstance(document.getElementById('modalAbandonarAvatar')).hide();
         document.getElementById('modalAbandonarAvatar').addEventListener('hidden.bs.modal', function handler() {
@@ -136,6 +197,11 @@ const avatarPicker = {
             avatarPicker.abrir();
         });
     },
+
+    /**
+ * Maneja salida sin guardar
+ * - En modo registro: genera avatar aleatorio
+ */
 
     abandonar: function () {
         bootstrap.Modal.getInstance(document.getElementById('modalAbandonarAvatar')).hide();
@@ -150,12 +216,19 @@ const avatarPicker = {
         }
     },
 
+    /**
+ * Confirma selección del avatar
+ */
+
     confirmar: function () {
         this.state.saved = true;
         bootstrap.Modal.getInstance(document.getElementById('modalAvatar')).hide();
         if (this.onConfirmar) this.onConfirmar(this.state);
     },
 
+    /**
+ * Cambia entre pasos del wizard
+ */
     irPaso: function (paso) {
         document.getElementById(`avatarStep${this._paso}`).style.display = 'none';
         this._paso = paso;
@@ -168,6 +241,7 @@ const avatarPicker = {
         this._actualizarPreviewModal();
     },
 
+  
     _actualizarIndicador: function () {
         for (let i = 1; i <= 3; i++) {
             const dot = document.getElementById(`dot-${i}`);
@@ -180,7 +254,9 @@ const avatarPicker = {
             line.classList.toggle('done', i < this._paso);
         }
     },
-
+  /**
+ * Renderiza grid de colores
+ */
     _renderColorGrid: function () {
         const grid = document.getElementById('bgColorGrid');
         const self = this;
@@ -192,6 +268,9 @@ const avatarPicker = {
         `).join('');
     },
 
+    /**
+ * Renderiza opciones de ojos con preview
+ */
     _renderEyesGrid: function () {
         const seed = this.getSeed();
         const grid = document.getElementById('eyesGrid');
@@ -206,6 +285,9 @@ const avatarPicker = {
         `).join('');
     },
 
+    /**
+ * Renderiza opciones de boca con preview
+ */
     _renderMouthGrid: function () {
         const seed = this.getSeed();
         const grid = document.getElementById('mouthGrid');
@@ -220,6 +302,9 @@ const avatarPicker = {
         `).join('');
     },
 
+    /**
+ * Actualiza estado al seleccionar color
+ */
     _seleccionarColor: function (hex) {
         this.state.bgColor = hex;
         this._renderColorGrid();
@@ -237,20 +322,41 @@ const avatarPicker = {
         this._renderMouthGrid();
         this._actualizarPreviewModal();
     },
+    /**
+     * ----------------------------------------------------------------------------
+     */
 
+    /**
+ * Actualiza imagen preview del avatar
+ */
     _actualizarPreviewModal: function () {
         const seed = this.getSeed();
         document.getElementById('avatarPreviewModal').src = this.buildUrl(seed, 70);
     },
 
+    /**
+ * Construye URL completa para DiceBear
+ * 
+ * @param {string} seed
+ * @param {number} size
+ * @returns {string}
+ */
+
     buildUrl: function (seed, size = 80) {
         return `${AVATAR_BASE_URL}?seed=${seed}&backgroundColor=${this.state.bgColor}&eyes=${this.state.eyes}&mouth=${this.state.mouth}&rotate=0&scale=100&backgroundType=solid&radius=0&size=${size}`;
     },
+
+    /**
+ * Devuelve parámetros del avatar en formato query string
+ */
 
     buildParams: function () {
         return `eyes=${this.state.eyes}&mouth=${this.state.mouth}&backgroundColor=${this.state.bgColor}`;
     },
 
+    /**
+ * Genera estado aleatorio para el avatar
+ */
     randomizeState: function () {
         const colores = AVATAR_COLORS.map(c => c.hex);
         this.state.bgColor = colores[Math.floor(Math.random() * colores.length)];

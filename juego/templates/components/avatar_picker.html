@@ -1,15 +1,49 @@
 <!-- Modal: Elegir / Editar Avatar -->
+ <!-- 
+Modal Bootstrap para selección y personalización de avatar.
+
+Características principales:
+- Modal bloqueado: no se puede cerrar haciendo clic fuera ni con ESC.
+- Flujo por pasos (wizard): 
+    Paso 1 -- Color de fondo
+    Paso 2 -- Ojos
+    Paso 3 -- Boca
+- Incluye preview en tiempo real del avatar.
+- Controlado por un objeto JS externo: avatarPicker.
+-->
 <div class="modal fade" id="modalAvatar" tabindex="-1" aria-hidden="true"
      data-bs-backdrop="static" data-bs-keyboard="false">
+     <!-- 
+        Contenedor principal del modal:
+        - Centrado verticalmente (modal-dialog-centered)
+        - Tamaño grande (modal-lg)
+        -->
     <div class="modal-dialog modal-dialog-centered modal-lg">
+    <!-- 
+        Contenido del modal:
+        - Estilos personalizados (modal-content-custom)
+        - Padding interno
+        - Borde personalizado usando variable CSS (--sky)
+        -->
         <div class="modal-content modal-content-custom p-4 border-0" style="border-color: var(--sky) !important;">
 
             <!-- Botón cerrar -->
+             <!-- 
+                    Botón de cierre personalizado:
+                    - No usa el cierre por defecto de Bootstrap
+                    - Llama a avatarPicker.confirmarAbandonar() para validar salida
+                    -->
             <button class="btn-close-modal" onclick="avatarPicker.confirmarAbandonar()">
                 <i class="fas fa-xmark"></i>
             </button>
 
             <!-- Header -->
+             <!-- 
+                Header del modal:
+                - Icono visual
+                - Título dinámico (puede cambiar según el paso)
+                - Indicador visual de progreso (3 pasos)
+                -->
             <div class="text-center mb-3">
                 <div style="font-size: 2em; line-height: 1;">
                     <i class="fas fa-face-smile" style="color: var(--sky);"></i>
@@ -17,6 +51,12 @@
                 <h2 class="mt-1" style="color: var(--sky); font-size: 1.5em;" id="avatarPickerTitulo">Personaliza tu avatar</h2>
 
                 <!-- Indicador de pasos -->
+                 <!-- 
+                    Indicador de pasos:
+                    - Puntos (dots) representan cada paso
+                    - Líneas conectan los pasos
+                    - Se actualizan dinámicamente con clases
+                    -->
                 <div class="avatar-steps-indicator">
                     <div class="avatar-step-dot active" id="dot-1"></div>
                     <div class="avatar-step-line" id="line-1-2"></div>
@@ -28,13 +68,24 @@
             </div>
 
             <!-- ── PASO 1: Color de fondo ── -->
+             <!-- 
+                    Paso 1 del flujo:
+                    - Selección del color de fondo del avatar
+                    - Grid dinámico generado por JS
+                    -->
             <div id="avatarStep1">
                 <p style="font-size: 0.8em; color: #aaa; text-align:center; margin-bottom: 1rem;">
                     ¡Este color será el fondo de tu emoji!
                 </p>
+                <!-- 
+                    Grid donde se renderizan los colores disponibles dinámicamente
+                    -->
                 <div class="avatar-color-grid" id="bgColorGrid"></div>
                 <div class="avatar-step-actions">
                     <div></div>
+                    <!-- 
+                        Botón para avanzar al paso 2
+                        -->
                     <button class="btn-auth" style="background: var(--sky); box-shadow: 0 6px 0 #6ab5d8; max-width: 180px;"
                             onclick="avatarPicker.irPaso(2)">
                         Siguiente <i class="fas fa-arrow-right ms-1"></i>
@@ -43,12 +94,25 @@
             </div>
 
             <!-- ── PASO 2: Ojos ── -->
+             <!-- 
+                Paso 2:
+                - Selección de ojos
+                - Inicialmente oculto (display:none)
+                -->
             <div id="avatarStep2" style="display:none;">
                 <p style="font-size: 0.8em; color: #aaa; text-align:center; margin-bottom: 1rem;">
                     ¡Elige los ojos de tu emoji!
                 </p>
+                <!-- 
+                    Grid dinámico de opciones de ojos
+                    -->
                 <div class="avatar-eyes-grid" id="eyesGrid"></div>
                 <div class="avatar-step-actions">
+                    <!-- 
+                        Botones de navegación:
+                        - Atrás → Paso 1
+                        - Siguiente → Paso 3
+                        -->
                     <button class="btn-auth" style="background: #ccc; box-shadow: 0 6px 0 #aaa; max-width: 140px;"
                             onclick="avatarPicker.irPaso(1)">
                         <i class="fas fa-arrow-left me-1"></i> Atrás
@@ -61,6 +125,11 @@
             </div>
 
             <!-- ── PASO 3: Boca ── -->
+             <!-- 
+                Paso final:
+                - Selección de boca
+                - Confirmación del avatar
+                -->
             <div id="avatarStep3" style="display:none;">
                 <p style="font-size: 0.8em; color: #aaa; text-align:center; margin-bottom: 1rem;">
                     ¡Elige la boca de tu emoji!
@@ -71,6 +140,10 @@
                             onclick="avatarPicker.irPaso(2)">
                         <i class="fas fa-arrow-left me-1"></i> Atrás
                     </button>
+                    <!-- 
+                        Botón final:
+                        - Ejecuta confirmación del avatar
+                        -->
                     <button class="btn-auth" style="background: var(--mint); box-shadow: 0 6px 0 #7ab8a8; max-width: 180px;"
                             id="btnConfirmarAvatar"
                             onclick="avatarPicker.confirmar()">
@@ -80,9 +153,18 @@
             </div>
 
             <!-- Preview lateral fijo -->
+             <!-- 
+                    Vista previa fija del avatar:
+                    - Muestra cambios en tiempo real
+                    - Imagen dinámica controlada por JS
+                    -->
             <div class="avatar-live-preview" id="avatarLivePreview">
                 <div style="font-size: 0.7em; color: #aaa; margin-bottom: 6px; text-align:center;">Preview</div>
                 <div class="avatar-preview-circle">
+                    <!-- 
+                        Imagen del avatar:
+                        - Se actualiza dinámicamente (src)
+                        -->
                     <img id="avatarPreviewModal" src="" alt="preview" width="70" height="70"
                          style="border-radius: 50%; display:block;">
                 </div>
@@ -94,22 +176,66 @@
 
 
 <!-- Modal: Confirmar abandonar avatar (solo en registro, se oculta en edición) -->
+ <!-- 
+Modal de confirmación al intentar salir del flujo de creación de avatar.
+
+Propósito:
+- Evitar que el usuario abandone accidentalmente el proceso.
+- Advertir que se asignará un avatar aleatorio si no completa la personalización.
+
+Condiciones de uso:
+- Se muestra únicamente durante el registro.
+- Se oculta en modo edición (según lógica externa).
+
+Restricciones:
+- Modal bloqueado (no se puede cerrar con ESC ni clic fuera).
+-->
 <div class="modal fade" id="modalAbandonarAvatar" tabindex="-1" aria-hidden="true"
      data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-custom p-4 border-0" style="border-color: var(--peach) !important;">
+           <!-- 
+                Sección principal del mensaje:
+                - Ícono visual de advertencia
+                - Título dinámico
+                - Subtítulo explicativo
+                -->
             <div class="text-center">
                 <div style="font-size: 2.5em;"><i class="fas fa-triangle-exclamation" style="color: var(--peach);"></i></div>
+                <!-- 
+                    Título del modal:
+                    - Puede cambiar dinámicamente (ej: registro vs edición)
+                    -->
                 <h2 class="mt-2" style="color: var(--peach); font-size: 1.4em;" id="abandonarTitulo">¿Salir sin guardar?</h2>
+                <!-- 
+                    Mensaje de advertencia:
+                    - Indica consecuencia directa: asignación de avatar aleatorio
+                    -->
                 <p style="font-size: 0.85em; color: #aaa; font-weight: normal;" id="abandonarSubtitulo">
                     Si sales ahora, se asignará un avatar aleatorio.<br>
                 </p>
                 <div class="d-flex gap-3 justify-content-center mt-3">
+                    <!-- 
+                        Acción:
+                        - Cancela el abandono
+                        - Regresa al flujo de creación de avatar
+
+                        Dependencia:
+                        - avatarPicker.volverDesdeAbandono()
+                        -->
                     <button class="btn-auth"
                             style="background: #ccc; box-shadow: 0 6px 0 #aaa; max-width: 160px;"
                             onclick="avatarPicker.volverDesdeAbandono()">
                         <i class="fas fa-arrow-left me-1"></i> Volver
                     </button>
+                    <!-- 
+                        Acción:
+                        - Confirma el abandono del proceso
+                        - Ejecuta lógica de salida
+
+                        Dependencia:
+                        - avatarPicker.abandonar()
+                        -->
                     <button class="btn-auth"
                             style="background: var(--peach); box-shadow: 0 6px 0 #d4886a; max-width: 160px;"
                             id="btnAbandonarConfirmar"
